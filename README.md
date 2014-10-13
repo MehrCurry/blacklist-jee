@@ -1,6 +1,8 @@
 blacklist-jee
 =============
 
+[![Build Status](https://travis-ci.org/MehrCurry/blacklist-jee.svg)](https://travis-ci.org/MehrCurry/blacklist-jee)
+
 You will need Java8 to compile and run.
 
 Check if your application is running with
