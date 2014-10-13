@@ -14,5 +14,7 @@ Prerequisite: VirtualBox and Vagrant installed.
 Initialize and connect to the VM from this project's root directory:
 
     $ vagrant up
-    # get a coffee
+    # grab yourself a coffee
     $ vagrant ssh
+
+If you need to install more tools in the VM please add them to ```vm-bootstrap.sh```.
