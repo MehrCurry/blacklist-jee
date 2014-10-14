@@ -20,3 +20,12 @@ Initialize and connect to the VM from this project's root directory:
     $ vagrant ssh
 
 If you need to install more tools in the VM please add them to ```vm-bootstrap.sh```.
+
+## Building and running Docker container
+
+``` bash
+cd Docker
+docker build --rm -t blacklist .
+# grab yourself another coffee (only for the first run)
+docker run -d -p 8080:8080 -p 4848:4848 blacklist
+```
