@@ -43,7 +43,7 @@ The service is running at:
  * /blacklist/{blacklistName}/{blacklistEntry} [GET,DELETE]
 
 ### /blacklist
-REST wrapper for the BlacklistService. Provides methods for finding, creating, modifying and deleting blacklists.
+REST wrapper for the BlacklistService. Provides methods for finding, creating and modifying blacklists.
 #### Methods
 ##### GET
 Returns a list of URIs for given blacklists.
@@ -89,15 +89,6 @@ Content-Type: text/plain
 Date: Wed, 15 Oct 2014 22:12:44 GMT
 Server: Apache-Coyote/1.1
 ```
-* 400 (Bad Request) on malformed JSON
-```
-Status Code: 400 Bad Request
-Connection: close
-Content-Length: 268
-Content-Type: text/plain
-Date: Wed, 15 Oct 2014 22:12:44 GMT
-Server: Apache-Coyote/1.1
-```
 * 400 (Bad Request) on malformed blacklist entities
 ```
 Status Code: 400 Bad Request
@@ -107,3 +98,15 @@ Date: Wed, 15 Oct 2014 22:13:54 GMT
 Server: Apache-Coyote/1.1
 validation-problem: The given blacklist entry/entries [ARG$%&, ##&##, 3&nbsp;45] is/are not alphanumeric
 ```
+
+### /blacklist/{blacklistName}
+Accessing a blacklist directly. Provides methods for browsing entries, deleting blacklists and adding entries.
+#### Methods
+##### GET, POST, DELETE
+TODO ...
+
+### /blacklist/{blacklistName}/{blacklistEntry}
+Accessing a blacklist entry. Provides methods for deleting blacklist entries or check if they exist.
+#### Methods
+##### GET, DELETE
+TODO ...
