@@ -1,25 +1,19 @@
 package prototype.blacklist.boundary;
 
 import java.net.URI;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
+import javax.ejb.Stateless;
 import javax.enterprise.context.ApplicationScoped;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
+import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
-@ApplicationScoped
+@Stateless
 @Path("blacklist")
+@Produces({"text/xml", "application/json"})
 public class BlacklistService {
     
 	@Context
@@ -32,12 +26,13 @@ public class BlacklistService {
 	}
 	
     @GET
-    public Collection<String> getBlacklistOverview() {
-    	Set<String> uris = new HashSet<String>(); 
+    public List<String> getBlacklistOverview() {
+    	List<String> uris = new ArrayList<>();
     	for(String blacklistName : blacklists.keySet()){
     		uris.add(uri.getBaseUri()+"blacklist/"+blacklistName);
     	}
         return uris;
+
     }
     
     @GET
@@ -91,8 +86,8 @@ public class BlacklistService {
     }
     
     @PUT    
-    public Response createBlacklist(Blacklist blacklist) {   
-    	
+    public Response createBlacklist(Blacklist blacklist) {
+
     	if(blacklist.getListedElements() != null && blacklist.getListedElements().size() > 0){
     		Set<String> errors = new HashSet<String>();
     		for(String blacklistEntry : blacklist.getListedElements()){
@@ -100,14 +95,14 @@ public class BlacklistService {
     				errors.add(blacklistEntry);
     			}
     		}
-    		
-    		if(errors.size() > 0){
+
+            if(errors.size() > 0){
     			return Response.notModified().header("not.modified.reason", "The given blacklist entry/entries ["+errors.toString()+"] is/are not alphanumeric").build();
     		}
     	}
     	
     	blacklists.put(blacklist.getName(), blacklist);
-    	final URI id = URI.create("blacklist/"+blacklist.getName());
+        final URI id = URI.create("blacklist/"+blacklist.getName());
     	return Response.created(id).build();
     }        
 }
