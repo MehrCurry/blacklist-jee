@@ -114,3 +114,4 @@ nbactions.xml
 nb-configuration.xml
 
 .vagrant
+.project
