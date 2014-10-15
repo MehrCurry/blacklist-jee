@@ -3,17 +3,14 @@ package prototype.blacklist.boundary;
 import java.net.URI;
 import java.util.*;
 
-import javax.ejb.Stateless;
 import javax.enterprise.context.ApplicationScoped;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
-import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
-@Stateless
+@ApplicationScoped
 @Path("blacklist")
-@Produces({"text/xml", "application/json"})
 public class BlacklistService {
     
 	@Context
@@ -26,8 +23,8 @@ public class BlacklistService {
 	}
 	
     @GET
-    public List<String> getBlacklistOverview() {
-    	List<String> uris = new ArrayList<>();
+    public Collection<String> getBlacklistOverview() {
+    	Set<String> uris = new HashSet<>();
     	for(String blacklistName : blacklists.keySet()){
     		uris.add(uri.getBaseUri()+"blacklist/"+blacklistName);
     	}
