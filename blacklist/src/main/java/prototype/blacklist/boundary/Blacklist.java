@@ -30,11 +30,7 @@ public class Blacklist {
 		return name;		
 	}
 
-	public void add(String blacklistEntry) {
-		listedElements.add(blacklistEntry);
-	}
-
-	public void remove(String blacklistEntry) {
-		listedElements.remove(blacklistEntry);		
+	public List<String> getListedElements() {		
+		return listedElements;
 	}	
 }
