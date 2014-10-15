@@ -102,11 +102,33 @@ validation-problem: The given blacklist entry/entries [ARG$%&, ##&##, 3&nbsp;45]
 ### /blacklist/{blacklistName}
 Accessing a blacklist directly. Provides methods for browsing entries, deleting blacklists and adding entries.
 #### Methods
-##### GET, POST, DELETE
+##### POST
+Adds a new blacklist entry to the blacklist
+###### Example Requests
+Adding "Entry1" and "Entry2" to the blacklist Gamma
+```
+curl -X POST -d '["Entry1","Entry2"]' --header 'Content-Type: application/json' --header 'Accept: application/json' "http://localhost:8080/blacklist-jee7/resources/blacklist/Gamma"
+```
+##### DELETE
+Deletes a blacklist entry from the blacklist
+###### Example Requests
+Removing the blacklist Gamma
+```
+curl -X DELETE --header 'Accept: application/json' "http://localhost:8080/blacklist-jee7/resources/blacklist/Gamma"
+```
+##### GET
 TODO ...
+
 
 ### /blacklist/{blacklistName}/{blacklistEntry}
 Accessing a blacklist entry. Provides methods for deleting blacklist entries or check if they exist.
 #### Methods
-##### GET, DELETE
+##### DELETE
+Deletes a blacklist entry from the blacklist
+###### Example Requests
+Removing "Entry1" from the blacklist Gamma
+```
+curl -X DELETE --header 'Accept: application/json' "http://localhost:8080/blacklist-jee7/resources/blacklist/Gamma/Entry1"
+```
+##### GET
 TODO ...
