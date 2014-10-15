@@ -1,7 +1,7 @@
 package prototype.blacklist.boundary;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -15,10 +15,10 @@ public class Blacklist {
 	private String name;	
 	
 	@XmlElement(required=false)
-	private List<String> listedElements;
+	private Set<String> listedElements;
 
 	public Blacklist() {	
-		this.listedElements = new ArrayList<String>();
+		this.listedElements = new HashSet<String>();
 	}
 	
 	public Blacklist(String name) {
@@ -30,7 +30,7 @@ public class Blacklist {
 		return name;		
 	}
 
-	public List<String> getListedElements() {		
+	public Set<String> getListedElements() {		
 		return listedElements;
 	}	
 }
