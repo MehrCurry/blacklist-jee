@@ -1,5 +1,8 @@
 package prototype.blacklist.presentation;
 
+import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.map.type.TypeFactory;
+
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.RequestScoped;;
 import javax.faces.context.ExternalContext;
@@ -12,6 +15,8 @@ import javax.ws.rs.client.WebTarget;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by jbeye on 15.10.14.
@@ -20,13 +25,17 @@ import java.time.LocalDateTime;
 @RequestScoped
 public class Index {
 
-    private String blacklistUrls;
+    private List<String> blacklistUrls;
 
-    public void setBlacklistUrls(String blacklistUrls) {
+    private Client client;
+
+    private WebTarget target;
+
+    public void setBlacklistUrls(List<String> blacklistUrls) {
         this.blacklistUrls = blacklistUrls;
     }
 
-    public String getBlacklistUrls() {
+    public List<String> getBlacklistUrls() {
         return blacklistUrls;
     }
 
@@ -48,13 +57,20 @@ public class Index {
 
     @PostConstruct
     public void init(){
-        Client client = ClientBuilder.newClient();
-        WebTarget target = client.target(getApplicationUri() + "/resources/blacklist");
-        JsonArray response = target.request().get(JsonArray.class);
-        blacklistUrls = String.valueOf(LocalDateTime.now()) + "<br/>";
-        for (int i = 0; i < response.size(); i++){
-            blacklistUrls += "<a href=\"" + response.getString(i) + "\">" + response.getString(i)+ "</a>";
-            blacklistUrls += "<br/>";
+        this.client = ClientBuilder.newClient();
+        this.target = this.client.target(getApplicationUri() + "/resources/blacklist");
+        JsonArray response = this.target.request().get(JsonArray.class);
+        blacklistUrls = new ArrayList<>();
+        for (int i=0; i<response.size(); i++) {
+            blacklistUrls.add(response.getString(i) );
         }
     }
+
+    public void delete(String url){
+        this.client = ClientBuilder.newClient();
+        this.target = this.client.target(url);
+        this.target.request().delete();
+        System.out.println(url);
+    }
+
 }
