@@ -2,7 +2,7 @@ package prototype.blacklist.presentation;
 
 
 import javax.annotation.PostConstruct;
-import javax.enterprise.context.RequestScoped;;
+import javax.enterprise.context.RequestScoped;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.inject.Named;
