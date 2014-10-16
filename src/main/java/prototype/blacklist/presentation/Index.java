@@ -70,7 +70,7 @@ public class Index {
         this.client = ClientBuilder.newClient();
         this.target = this.client.target(url);
         this.target.request().delete();
-        System.out.println(url);
+        init();
     }
 
 }

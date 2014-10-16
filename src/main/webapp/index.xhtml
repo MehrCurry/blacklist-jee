@@ -13,7 +13,7 @@
     <h:outputLink value="#{url}" >
         #{url}
     </h:outputLink>
-    <h:commandButton value="Delete" action="#{index.delete(url)}" />
+    <h:commandButton value="Delete" action="#{index.delete(url)}" outcome="index"/>
     <br/>
     </h:form>
 </ui:repeat>
