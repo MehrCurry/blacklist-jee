@@ -2,11 +2,15 @@ package prototype.blacklist.presentation;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.RequestScoped;;
+import javax.faces.context.ExternalContext;
+import javax.faces.context.FacesContext;
 import javax.inject.Named;
 import javax.json.JsonArray;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.WebTarget;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.time.LocalDateTime;
 
 /**
@@ -16,25 +20,41 @@ import java.time.LocalDateTime;
 @RequestScoped
 public class Index {
 
-    public void setHello(String hello) {
-        this.hello = hello;
+    private String blacklistUrls;
+
+    public void setBlacklistUrls(String blacklistUrls) {
+        this.blacklistUrls = blacklistUrls;
     }
 
-    public String getHello() {
-        return hello;
+    public String getBlacklistUrls() {
+        return blacklistUrls;
     }
 
-    String hello = "Hallo";
+    /**
+     * Determine the applicationUri.
+     * @return the applicationUri.
+     */
+    private String getApplicationUri() {
+        try {
+            ExternalContext ext = FacesContext.getCurrentInstance().getExternalContext();
+            URI uri = new URI(ext.getRequestScheme(),
+                    null, ext.getRequestServerName(), ext.getRequestServerPort(),
+                    ext.getRequestContextPath(), null, null);
+            return uri.toASCIIString();
+        } catch (URISyntaxException e) {
+            return "http://localhost:8080/blacklist-jee7/";
+        }
+    }
 
     @PostConstruct
     public void init(){
         Client client = ClientBuilder.newClient();
-        WebTarget target = client.target("http://localhost:8081/blacklist-jee7/resources/blacklist");
+        WebTarget target = client.target(getApplicationUri() + "/resources/blacklist");
         JsonArray response = target.request().get(JsonArray.class);
-        hello = String.valueOf(LocalDateTime.now()) + "<br/>";
+        blacklistUrls = String.valueOf(LocalDateTime.now()) + "<br/>";
         for (int i = 0; i < response.size(); i++){
-            hello += "<a href=\"" + response.getString(i) + "\">" + response.getString(i)+ "</a>";
-            hello += "<br/>";
+            blacklistUrls += "<a href=\"" + response.getString(i) + "\">" + response.getString(i)+ "</a>";
+            blacklistUrls += "<br/>";
         }
     }
 }
