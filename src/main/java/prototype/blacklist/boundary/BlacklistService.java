@@ -1,6 +1,7 @@
 package prototype.blacklist.boundary;
 
 import java.net.URI;
+import java.util.*;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -17,6 +18,10 @@ import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
+
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
@@ -28,6 +33,7 @@ import javax.ws.rs.core.UriInfo;
  * 
  * Request/Response handling refers to: http://www.w3.org/Protocols/rfc2616/rfc2616-sec9.html.
  */
+//@Stateless
 @ApplicationScoped
 @Path("blacklist")
 public class BlacklistService {
@@ -35,6 +41,9 @@ public class BlacklistService {
 	/** The URI of this service. (e.g. http://localhost:8080/blacklist-jee7/resources) */
 	@Context
 	private UriInfo uri;
+                
+        @PersistenceContext 
+        private EntityManager entityManager;
 		
 	@Inject
     private Validator validator;
@@ -70,6 +79,27 @@ public class BlacklistService {
     public Blacklist getBlacklist(@PathParam("blacklistName") String blacklistName) {
         return blacklists.get(blacklistName);        
     }    
+    
+    @POST
+    @Path("blacklistEntries/{type}/{value}")
+    public void addBlacklistEntry(@PathParam("type") String type,@PathParam("value") String value) {
+        BlacklistEntry blacklistEntry  = new BlacklistEntry();
+        blacklistEntry.setType(type);
+        blacklistEntry.setValue(value);
+        entityManager.persist(blacklistEntry);
+    }
+    
+    @GET
+    @Path("blacklistEntries")
+    public List<BlacklistEntry> getBlacklistEntries() {
+        TypedQuery<BlacklistEntry> query =
+        entityManager.createNamedQuery("BlacklistEntry.findAll", BlacklistEntry.class);
+        List<BlacklistEntry> results = query.getResultList();
+        return results;
+    }   
+    
+       
+
     
     /**
      * Puts one or more blacklist entries into a specific blacklist.
