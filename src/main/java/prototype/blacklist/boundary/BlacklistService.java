@@ -1,5 +1,7 @@
 package prototype.blacklist.boundary;
 
+import prototype.blacklist.entity.BlacklistEntry;
+
 import java.net.URI;
 import java.util.*;
 import java.util.Collection;
@@ -242,8 +244,7 @@ public class BlacklistService {
      * If the given blacklist does not exist a not found response is sent. 
      * Else, the blacklist will be removed and a no content response is sent 
      * (see http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html)
-     * 
-     * @param blacklistEntry The identifier of the blacklist entry
+     *
      * @param blacklistName The name of the blacklist
      * 
      * @return A HTTP response.
