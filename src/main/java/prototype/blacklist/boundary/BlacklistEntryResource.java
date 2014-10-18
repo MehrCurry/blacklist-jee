@@ -12,8 +12,10 @@ import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.ws.rs.core.UriInfo;
 
 import prototype.blacklist.entity.BlacklistEntry;
@@ -54,12 +56,11 @@ public class BlacklistEntryResource {
 	@GET
 	@Path(ENTRIES_URI_TEMPLATE)
 	public Response getEntries() {
-		List<BlacklistEntry> entries = blacklistService.getEntries();
 		JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
-		for (BlacklistEntry entry : entries) {
+		blacklistService.getEntries().forEach(entry -> {
 			URI entryUri = uri.getBaseUriBuilder().path(BLACKLIST).path(ENTRY_URI_TEMPLATE).path(entry.getBlacklistEntryId().toString()).build();
 			arrayBuilder.add(entryUri.toString());
-		}
+		});
 		return Response.ok().entity(arrayBuilder.build()).build();
 	}
 
