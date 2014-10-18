@@ -19,9 +19,11 @@ import javax.ws.rs.core.UriInfo;
 import prototype.blacklist.entity.BlacklistEntry;
 
 @Stateless
-@Path("blacklist")
+@Path(BlacklistEntryResource.BLACKLIST)
 public class BlacklistEntryResource {
 	
+	static final String BLACKLIST = "blacklist";
+
 	/** The URI of this service. (e.g. http://localhost:8080/blacklist-jee7/resources) */
 	@Context
 	private UriInfo uri;
@@ -32,8 +34,11 @@ public class BlacklistEntryResource {
 	@Inject
 	private BlacklistService blacklistService;
 	
+	private static final String ENTRY_URI_TEMPLATE = "entry";
+	private static final String ENTRIES_URI_TEMPLATE = "entries";
+	
 	@POST
-	@Path("entry")
+	@Path(ENTRY_URI_TEMPLATE)
 	public Response add(BlacklistEntry newEntry) {
 		blacklistService.add(newEntry);
 		URI entryUri = uri.getAbsolutePathBuilder().path(newEntry.getBlacklistEntryId().toString()).build();
@@ -41,18 +46,18 @@ public class BlacklistEntryResource {
 	}
 	
 	@GET
-	@Path("entry/{id}")
+	@Path(ENTRY_URI_TEMPLATE+"/{id}")
 	public BlacklistEntry getEntry(@PathParam("id") long id) {
 		return blacklistService.getEntry(id);
 	}
 	
 	@GET
-	@Path("entries")
+	@Path(ENTRIES_URI_TEMPLATE)
 	public Response getEntries() {
 		List<BlacklistEntry> entries = blacklistService.getEntries();
 		JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
 		for (BlacklistEntry entry : entries) {
-			URI entryUri = uri.getAbsolutePathBuilder().path(entry.getBlacklistEntryId().toString()).build();
+			URI entryUri = uri.getBaseUriBuilder().path(BLACKLIST).path(ENTRY_URI_TEMPLATE).path(entry.getBlacklistEntryId().toString()).build();
 			arrayBuilder.add(entryUri.toString());
 		}
 		return Response.ok().entity(arrayBuilder.build()).build();
