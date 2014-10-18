@@ -1,0 +1,23 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:head />
+<body>
+<h1>Add entry</h1>
+<h:form id="form">
+	<h:inputText id="type" value="#{blacklistentries.type}"/>
+	<h:inputText id="value" value="#{blacklistentries.value}"/>
+	<h:commandButton value="Add" action="#{blacklistentries.add}"/>
+</h:form>
+<h1>List of blacklistEntries:</h1>
+<ui:repeat value="#{blacklistentries.list}" var="uri">
+    <h:outputLink value="#{uri}" >
+        #{uri}
+    </h:outputLink>
+    <br/>
+</ui:repeat>
+</body>
+</html>
