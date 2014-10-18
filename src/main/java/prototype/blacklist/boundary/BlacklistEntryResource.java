@@ -1,21 +1,21 @@
 package prototype.blacklist.boundary;
 
 import java.net.URI;
-import java.util.List;
+import java.util.Set;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.json.Json;
 import javax.json.JsonArrayBuilder;
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
 import javax.validation.Validator;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.ws.rs.core.UriInfo;
 
 import prototype.blacklist.entity.BlacklistEntry;
@@ -26,13 +26,12 @@ public class BlacklistEntryResource {
 	
 	static final String BLACKLIST = "blacklist";
 
-	/** The URI of this service. (e.g. http://localhost:8080/blacklist-jee7/resources) */
 	@Context
 	private UriInfo uri;
-                
+	
 	@Inject
     private Validator validator;
-	
+                
 	@Inject
 	private BlacklistService blacklistService;
 	
@@ -42,6 +41,10 @@ public class BlacklistEntryResource {
 	@POST
 	@Path(ENTRY_URI_TEMPLATE)
 	public Response add(BlacklistEntry newEntry) {
+		Set<ConstraintViolation<BlacklistEntry>> violations = validator.validate(newEntry);
+		if (!violations.isEmpty()) {
+			throw new ConstraintViolationException("Error saving BlacklistEntry: " + newEntry, violations);
+		}
 		blacklistService.add(newEntry);
 		URI entryUri = uri.getAbsolutePathBuilder().path(newEntry.getBlacklistEntryId().toString()).build();
 		return Response.created(entryUri).build();
@@ -63,5 +66,4 @@ public class BlacklistEntryResource {
 		});
 		return Response.ok().entity(arrayBuilder.build()).build();
 	}
-
 }
