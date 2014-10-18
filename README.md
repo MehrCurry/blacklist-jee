@@ -33,3 +33,8 @@ docker run -d -p 8080:8080 -p 4848:4848 blacklist
 ## Using the service
 
 ITs all (... well most of it)  in the [Wiki] (https://github.com/MehrCurry/blacklist-jee/wiki/Using-the-service)
+
+## Using glassfish with DB
+Start the database before starting the ApplicationServer:
+
+	<somedirectory>\glassfish4\bin>asadmin.bat start-database
