@@ -1,17 +1,18 @@
 package prototype.blacklist.boundary;
 
-import prototype.blacklist.entity.BlacklistEntry;
-
 import java.net.URI;
-import java.util.*;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import javax.enterprise.context.ApplicationScoped;
+import javax.ejb.Stateless;
 import javax.inject.Inject;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
 import javax.ws.rs.DELETE;
@@ -20,14 +21,12 @@ import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.TypedQuery;
-
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriInfo;
+
+import prototype.blacklist.entity.BlacklistEntry;
 
 
 /**
@@ -35,8 +34,7 @@ import javax.ws.rs.core.UriInfo;
  * 
  * Request/Response handling refers to: http://www.w3.org/Protocols/rfc2616/rfc2616-sec9.html.
  */
-//@Stateless
-@ApplicationScoped
+@Stateless
 @Path("blacklist")
 public class BlacklistService {
     
@@ -44,16 +42,30 @@ public class BlacklistService {
 	@Context
 	private UriInfo uri;
                 
-        @PersistenceContext 
-        private EntityManager entityManager;
-		
 	@Inject
     private Validator validator;
+	
+	@PersistenceContext
+	private EntityManager entityManager;
 	
 	private Map<String,Blacklist> blacklists;
 	
 	public BlacklistService() {
 		blacklists = new HashMap<String,Blacklist>();		
+	}
+	
+	public void add(BlacklistEntry newEntry) {
+		// TODO check for duplicates
+		entityManager.persist(newEntry);
+	}
+	
+	public BlacklistEntry getEntry(@PathParam("id") long id) {
+		return this.entityManager.find(BlacklistEntry.class, id);
+	}
+	
+	public List<BlacklistEntry> getEntries() {
+		List<BlacklistEntry> entries = this.entityManager.createNamedQuery("BlacklistEntry.findAll", BlacklistEntry.class).getResultList();
+		return entries;
 	}
 	
 	/**
