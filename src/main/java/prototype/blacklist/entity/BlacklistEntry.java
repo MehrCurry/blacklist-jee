@@ -29,7 +29,8 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "BlacklistEntry.findAll", query = "SELECT ble FROM BlacklistEntry ble"),
     @NamedQuery(name = "BlacklistEntry.findBlacklistEntryId", query = "SELECT ble FROM BlacklistEntry ble WHERE ble.blacklistEntryId = :blacklistEntryId"),
     @NamedQuery(name = "BlacklistEntry.findByType", query = "SELECT ble FROM BlacklistEntry ble WHERE ble.type = :type"),
-    @NamedQuery(name = "BlacklistEntry.findByValue", query = "SELECT ble FROM BlacklistEntry ble WHERE ble.value = :value")})
+    @NamedQuery(name = "BlacklistEntry.findByValue", query = "SELECT ble FROM BlacklistEntry ble WHERE ble.value = :value"),
+    @NamedQuery(name = "BlacklistEntry.findByTypeAndValue", query = "SELECT ble FROM BlacklistEntry ble WHERE ble.type = :type AND ble.value = :value")})
 public class BlacklistEntry implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
