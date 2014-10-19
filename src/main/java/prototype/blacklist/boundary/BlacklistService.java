@@ -73,6 +73,7 @@ public class BlacklistService {
 		}
 	}
 
+	@Path("{id}")
 	public BlacklistEntry getEntry(@PathParam("id") long id) {
 		return this.entityManager.find(BlacklistEntry.class, id);
 	}
