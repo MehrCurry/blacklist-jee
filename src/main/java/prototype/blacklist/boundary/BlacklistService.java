@@ -63,15 +63,19 @@ public class BlacklistService {
 	 * If an entry with the same Value and Type is already in the database, 
 	 * the new Entry won´t be persisted.
 	 * @param newEntry
+	 * @return 
 	 */
-	public void add(BlacklistEntry newEntry) {
+	public BlacklistEntry add(BlacklistEntry newEntry) {
 		TypedQuery<BlacklistEntry> query = entityManager.createNamedQuery(
 				"BlacklistEntry.findByTypeAndValue", BlacklistEntry.class);
                 query.setParameter("type", newEntry.getType());
                 query.setParameter("value", newEntry.getValue());
 		List<BlacklistEntry> resultList = query.getResultList();
-		if ((null != resultList) && (resultList.size() == 0)) {
+		if (resultList.isEmpty()) {
 			entityManager.persist(newEntry);
+			return newEntry;
+		} else {
+			return resultList.get(0);
 		}
 	}
 

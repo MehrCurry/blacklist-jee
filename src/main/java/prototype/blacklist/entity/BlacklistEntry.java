@@ -18,10 +18,13 @@ import javax.persistence.Version;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import com.sun.istack.NotNull;
+
 /**
  *
  * @author Rabe
  */
+@ValidBlacklistEntry
 @Entity
 @Table(name = "BLACKLISTENTRY")
 @XmlRootElement
@@ -39,16 +42,21 @@ public class BlacklistEntry implements Serializable {
     private Long blacklistEntryId;
     
     @Size(max = 30)
+    @NotNull
     @Column(name = "TYPE")
     private String type;
     
-    @Size(max = 10)
+    @Size(max = 40)
+    @NotNull
     @Column(name = "VALUE")
     private String value;
     
     @Version
     private Long version;
     
+    public boolean isValid() {
+    	return type != null && value != null;
+    }
 
     public BlacklistEntry() {
     }
@@ -84,9 +92,6 @@ public class BlacklistEntry implements Serializable {
     public void setVersion(Long version) {
         this.version = version;
     }
-
-
-
 
     @Override
     public int hashCode() {

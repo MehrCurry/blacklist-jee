@@ -45,8 +45,8 @@ public class BlacklistEntryResource {
 		if (!violations.isEmpty()) {
 			throw new ConstraintViolationException("Error saving BlacklistEntry: " + newEntry, violations);
 		}
-		blacklistService.add(newEntry);
-		URI entryUri = uri.getAbsolutePathBuilder().path(newEntry.getBlacklistEntryId().toString()).build();
+		BlacklistEntry entry = blacklistService.add(newEntry);
+		URI entryUri = uri.getAbsolutePathBuilder().path(entry.getBlacklistEntryId().toString()).build();
 		return Response.created(entryUri).build();
 	}
 	
