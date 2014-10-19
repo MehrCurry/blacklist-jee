@@ -19,6 +19,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
 import prototype.blacklist.entity.BlacklistEntry;
+import prototype.blacklist.normalize.BlacklistValueNormalizer;
 
 @Stateless
 @Path(BlacklistEntryResource.BLACKLIST)
@@ -30,8 +31,11 @@ public class BlacklistEntryResource {
 	private UriInfo uri;
 	
 	@Inject
-    private Validator validator;
-                
+        private Validator validator;
+
+        @Inject
+        private BlacklistValueNormalizer normalizer;
+
 	@Inject
 	private BlacklistService blacklistService;
 	
@@ -45,6 +49,7 @@ public class BlacklistEntryResource {
 		if (!violations.isEmpty()) {
 			throw new ConstraintViolationException("Error saving BlacklistEntry: " + newEntry, violations);
 		}
+                normalizer.normalize(newEntry);
 		BlacklistEntry entry = blacklistService.add(newEntry);
 		URI entryUri = uri.getAbsolutePathBuilder().path(entry.getBlacklistEntryId().toString()).build();
 		return Response.created(entryUri).build();
