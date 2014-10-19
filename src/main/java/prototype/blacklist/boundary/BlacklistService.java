@@ -67,6 +67,8 @@ public class BlacklistService {
 	public void add(BlacklistEntry newEntry) {
 		TypedQuery<BlacklistEntry> query = entityManager.createNamedQuery(
 				"BlacklistEntry.findByTypeAndValue", BlacklistEntry.class);
+                query.setParameter("type", newEntry.getType());
+                query.setParameter("value", newEntry.getValue());
 		List<BlacklistEntry> resultList = query.getResultList();
 		if ((null != resultList) && (resultList.size() == 0)) {
 			entityManager.persist(newEntry);
