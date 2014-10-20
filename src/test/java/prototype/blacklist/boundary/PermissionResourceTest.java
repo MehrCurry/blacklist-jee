@@ -11,12 +11,13 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import javax.ws.rs.core.Response.Status;
+import static org.assertj.core.api.Assertions.*;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mockito;
-import static org.assertj.core.api.Assertions.*;
 import org.mockito.Matchers;
+import org.mockito.Mockito;
+import prototype.blacklist.entity.BlacklistEntry;
 
 public class PermissionResourceTest {
     private PermissionResource cut;
@@ -44,12 +45,13 @@ public class PermissionResourceTest {
         cut.setEm(em);
     
         assertThat(cut.isGranted("foo", "bar").getStatus()).isEqualTo(Status.NO_CONTENT.getStatusCode());
-
     }
 
     @Test
     public void a_known_type_with_an_matching_entries_should_result_in_a_forbidden_reponse() {
-        EntityManager em=createEntityManagerMock(Arrays.asList(new String[]{"xyz","bar"}));
+        EntityManager em=createEntityManagerMock(Arrays.asList(new BlacklistEntry[]{
+            new BlacklistEntry("foo","bar")
+        }));
         cut.setEm(em);
         
         assertThat(cut.isGranted("foo", "bar").getStatus()).isEqualTo(Status.FORBIDDEN.getStatusCode());

@@ -61,6 +61,11 @@ public class BlacklistEntry implements Serializable {
     public BlacklistEntry() {
     }
 
+    public BlacklistEntry(String type, String value) {
+        this.type = type;
+        this.value = value;
+    }
+
     public Long getBlacklistEntryId() {
         return blacklistEntryId;
     }
