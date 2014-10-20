@@ -56,7 +56,9 @@ public class IBanBlackListIntegrationTest {
                 body(entries).
                 post(LOCAL_APP_URL + "/" + BLACKLIST_NAME_IBANS);
 
-        // so finally we check that the iban is blacklisted
+        // **********************************************************
+        // so finally we check that the expected iban is blacklisted
+        // **********************************************************
         expect().
                 statusCode(200).
                 when().
@@ -79,7 +81,9 @@ public class IBanBlackListIntegrationTest {
                 body(blacklist).
                 put(LOCAL_APP_URL);
 
-        // get an unknown entry
+        // **********************************************************
+        // so finally we check that the expected iban is blacklisted
+        // **********************************************************
         expect().
                 statusCode(204).
                 when().
@@ -102,7 +106,7 @@ public class IBanBlackListIntegrationTest {
                 body(blacklist).
                 put(LOCAL_APP_URL);
 
-        // blacklist an illegal iban
+        // blacklist an iban
         String[] entries = new String[] {"lk_"};
         expect().
                 statusCode(400).
