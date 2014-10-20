@@ -9,7 +9,7 @@ package prototype.blacklist;
  *
  * @author michael
  */
-public abstract class AbstractBlacklistIntegrationTest {
+public interface AbstractBlacklistIntegrationTest {
     
     public static final String LOCAL_APP_URL = "http://localhost:8080/blacklist-jee7/resources/blacklist";
     

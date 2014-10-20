@@ -15,7 +15,7 @@ import static com.jayway.restassured.RestAssured.*;
  *
  * @author michael
  */
-public class IBanBlackListIntegrationTest extends AbstractBlacklistIntegrationTest {
+public class IBanBlackListIntegrationTest implements AbstractBlacklistIntegrationTest {
 
     private static final String BLACKLIST_NAME_IBANS = "ibans";
     

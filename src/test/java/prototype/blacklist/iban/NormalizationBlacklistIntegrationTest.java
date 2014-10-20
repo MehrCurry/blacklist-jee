@@ -9,7 +9,7 @@ import prototype.blacklist.boundary.Blacklist;
  *
  * @author AN
  */
-public class NormalizationBlacklistIntegrationTest extends AbstractBlacklistIntegrationTest {
+public class NormalizationBlacklistIntegrationTest implements AbstractBlacklistIntegrationTest {
 
     private static final String BLACKLIST_NAME_IBAN = "iban";
     
