@@ -11,7 +11,6 @@ import java.util.Set;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
-import javax.persistence.Persistence;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.validation.ConstraintViolation;
@@ -28,6 +27,8 @@ import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriInfo;
 
 import prototype.blacklist.entity.BlacklistEntry;
+import prototype.blacklist.normalize.BlacklistValueNormalizer;
+import prototype.blacklist.normalize.Normalizer;
 
 /**
  * Simple service to manage in-mem blacklists via REST.
@@ -49,6 +50,9 @@ public class BlacklistService {
 	@Inject
 	private Validator validator;
 
+        @Inject
+        private BlacklistValueNormalizer normalizer;
+        
 	@PersistenceContext
 	private EntityManager entityManager;
 
@@ -63,15 +67,20 @@ public class BlacklistService {
 	 * If an entry with the same Value and Type is already in the database, 
 	 * the new Entry won´t be persisted.
 	 * @param newEntry
+	 * @return 
 	 */
-	public void add(BlacklistEntry newEntry) {
+	public BlacklistEntry add(BlacklistEntry newEntry) {
+                normalizer.normalize(newEntry);
 		TypedQuery<BlacklistEntry> query = entityManager.createNamedQuery(
 				"BlacklistEntry.findByTypeAndValue", BlacklistEntry.class);
                 query.setParameter("type", newEntry.getType());
                 query.setParameter("value", newEntry.getValue());
 		List<BlacklistEntry> resultList = query.getResultList();
-		if ((null != resultList) && (resultList.size() == 0)) {
+		if (resultList.isEmpty()) {
 			entityManager.persist(newEntry);
+			return newEntry;
+		} else {
+			return resultList.get(0);
 		}
 	}
 
@@ -120,6 +129,7 @@ public class BlacklistService {
 		BlacklistEntry blacklistEntry = new BlacklistEntry();
 		blacklistEntry.setType(type);
 		blacklistEntry.setValue(value);
+                normalizer.normalize(blacklistEntry);
 		entityManager.persist(blacklistEntry);
 	}
 
@@ -177,17 +187,19 @@ public class BlacklistService {
 			}
 		}
 
+                final Normalizer typeNormalizer = normalizer.createNormalizerByType(blacklistName);
 		if (blacklistEntries.length == 1) {
+                        final String normalizedValue = typeNormalizer.normalize(blacklistEntries[0]);
 			final URI id = URI.create("blacklist/" + blacklistName + "/"
-					+ blacklistEntries[0]);
+					+ normalizedValue);
 			blacklists.get(blacklistName).getListedElements()
-					.add(blacklistEntries[0]);
+					.add(normalizedValue);
 			return Response.created(id).build();
 		}
 
 		for (String blacklistEntry : blacklistEntries) {
-			blacklists.get(blacklistName).getListedElements()
-					.add(blacklistEntry);
+                       final String normalizedValue = typeNormalizer.normalize(blacklistEntry);
+                       blacklists.get(blacklistName).getListedElements().add(normalizedValue);
 		}
 		return Response.ok().build();
 	}
@@ -215,6 +227,7 @@ public class BlacklistService {
 	public Response getBlacklistEntry(
 			@PathParam("blacklistEntry") String blacklistEntry,
 			@PathParam("blacklistName") String blacklistName) {
+                final String normalizedValue = normalizer.createNormalizerByType(blacklistName).normalize(blacklistEntry);
 		if (!blacklists.containsKey(blacklistName)) {
 			// see standard RFC 7231
 			return Response
@@ -223,7 +236,7 @@ public class BlacklistService {
 							"The given blacklist name [" + blacklistName
 									+ "] does not exist").build();
 		} else if (!blacklists.get(blacklistName).getListedElements()
-				.contains(blacklistEntry)) {
+				.contains(normalizedValue)) {
 			return Response.noContent().build();
 		}
 		return Response.ok().build();
