@@ -5,17 +5,18 @@
  */
 package prototype.blacklist.iban;
 
-import prototype.blacklist.AbstractBlacklistIntegrationTest;
+import prototype.blacklist.ApplicationURL;
 import org.junit.Before;
 import org.junit.Test;
 import prototype.blacklist.boundary.Blacklist;
 import static com.jayway.restassured.RestAssured.*;
+import javax.ws.rs.core.MediaType;
 
 /**
  *
  * @author michael
  */
-public class IBanBlackListIntegrationTest implements AbstractBlacklistIntegrationTest {
+public class IBanBlackListIntegrationTest  {
 
     private static final String BLACKLIST_NAME_IBANS = "ibans";
     
@@ -39,9 +40,9 @@ public class IBanBlackListIntegrationTest implements AbstractBlacklistIntegratio
                 statusCode(201).
                 when().
                 given().
-                contentType(DEFAULT_CONTENT_TYPE).
+                contentType(MediaType.APPLICATION_JSON).
                 body(blacklist).
-                put(LOCAL_APP_URL);
+                put(ApplicationURL.LOCAL.getAppURL());
 
         // blacklist an iban
         String[] entries = new String[] {BLACKLISTED_IBAN};
@@ -49,17 +50,17 @@ public class IBanBlackListIntegrationTest implements AbstractBlacklistIntegratio
                 statusCode(201).
                 when().
                 given().
-                contentType(DEFAULT_CONTENT_TYPE).
+                contentType(MediaType.APPLICATION_JSON).
                 body(entries).
-                post(LOCAL_APP_URL + "/" + BLACKLIST_NAME_IBANS);
+                post(ApplicationURL.LOCAL.getAppURL() + "/" + BLACKLIST_NAME_IBANS);
 
         // so finally we check that the iban is blacklisted
         expect().
                 statusCode(200).
                 when().
                 given().
-                contentType(DEFAULT_CONTENT_TYPE).
-                get(LOCAL_APP_URL + "/" + BLACKLIST_NAME_IBANS + "/" + BLACKLISTED_IBAN);
+                contentType(MediaType.APPLICATION_JSON).
+                get(ApplicationURL.LOCAL.getAppURL() + "/" + BLACKLIST_NAME_IBANS + "/" + BLACKLISTED_IBAN);
 
     }
     
@@ -72,17 +73,17 @@ public class IBanBlackListIntegrationTest implements AbstractBlacklistIntegratio
                 statusCode(201).
                 when().
                 given().
-                contentType(DEFAULT_CONTENT_TYPE).
+                contentType(MediaType.APPLICATION_JSON).
                 body(blacklist).
-                put(LOCAL_APP_URL);
+                put(ApplicationURL.LOCAL.getAppURL());
 
         // get an unknown entry
         expect().
                 statusCode(204).
                 when().
                 given().
-                contentType(DEFAULT_CONTENT_TYPE).
-                get(LOCAL_APP_URL + "/" + BLACKLIST_NAME_IBANS + "/XXXXXXX");
+                contentType(MediaType.APPLICATION_JSON).
+                get(ApplicationURL.LOCAL.getAppURL() + "/" + BLACKLIST_NAME_IBANS + "/XXXXXXX");
 
     }
     
@@ -95,9 +96,9 @@ public class IBanBlackListIntegrationTest implements AbstractBlacklistIntegratio
                 statusCode(201).
                 when().
                 given().
-                contentType(DEFAULT_CONTENT_TYPE).
+                contentType(MediaType.APPLICATION_JSON).
                 body(blacklist).
-                put(LOCAL_APP_URL);
+                put(ApplicationURL.LOCAL.getAppURL());
 
         // blacklist an illegal iban
         String[] entries = new String[] {"lk_"};
@@ -105,9 +106,9 @@ public class IBanBlackListIntegrationTest implements AbstractBlacklistIntegratio
                 statusCode(400).
                 when().
                 given().
-                contentType(DEFAULT_CONTENT_TYPE).
+                contentType(MediaType.APPLICATION_JSON).
                 body(entries).
-                post(LOCAL_APP_URL + "/" + BLACKLIST_NAME_IBANS);
+                post(ApplicationURL.LOCAL.getAppURL() + "/" + BLACKLIST_NAME_IBANS);
 
     }
     

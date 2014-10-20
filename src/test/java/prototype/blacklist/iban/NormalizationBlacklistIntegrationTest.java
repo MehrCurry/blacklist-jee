@@ -1,7 +1,8 @@
 package prototype.blacklist.iban;
 
-import prototype.blacklist.AbstractBlacklistIntegrationTest;
+import prototype.blacklist.ApplicationURL;
 import static com.jayway.restassured.RestAssured.expect;
+import javax.ws.rs.core.MediaType;
 import org.junit.Test;
 import prototype.blacklist.boundary.Blacklist;
 
@@ -9,7 +10,7 @@ import prototype.blacklist.boundary.Blacklist;
  *
  * @author AN
  */
-public class NormalizationBlacklistIntegrationTest implements AbstractBlacklistIntegrationTest {
+public class NormalizationBlacklistIntegrationTest {
 
     private static final String BLACKLIST_NAME_IBAN = "iban";
     
@@ -24,9 +25,9 @@ public class NormalizationBlacklistIntegrationTest implements AbstractBlacklistI
                 statusCode(201).
                 when().
                 given().
-                contentType(DEFAULT_CONTENT_TYPE).
+                contentType(MediaType.APPLICATION_JSON).
                 body(blacklist).
-                put(LOCAL_APP_URL);
+                put(ApplicationURL.LOCAL.getAppURL());
 
         // blacklist the iban with small letters
         String[] entries = new String[] {"de"+BLACKLISTED_IBAN_WITHOUT_COUNTRY};
@@ -34,9 +35,9 @@ public class NormalizationBlacklistIntegrationTest implements AbstractBlacklistI
                 statusCode(201).
                 when().
                 given().
-                contentType(DEFAULT_CONTENT_TYPE).
+                contentType(MediaType.APPLICATION_JSON).
                 body(entries).
-                post(LOCAL_APP_URL + "/" + BLACKLIST_NAME_IBAN);
+                post(ApplicationURL.LOCAL.getAppURL() + "/" + BLACKLIST_NAME_IBAN);
 
         // blacklist same iban with upper case letters
         entries = new String[] {"DE"+BLACKLISTED_IBAN_WITHOUT_COUNTRY};
@@ -44,17 +45,17 @@ public class NormalizationBlacklistIntegrationTest implements AbstractBlacklistI
                 statusCode(201).
                 when().
                 given().
-                contentType(DEFAULT_CONTENT_TYPE).
+                contentType(MediaType.APPLICATION_JSON).
                 body(entries).
-                post(LOCAL_APP_URL + "/" + BLACKLIST_NAME_IBAN);
+                post(ApplicationURL.LOCAL.getAppURL() + "/" + BLACKLIST_NAME_IBAN);
          
         //check that the iban with whitespace and different letter case is blacklisted
         expect().
                 statusCode(200).
                 when().
                 given().
-                contentType(DEFAULT_CONTENT_TYPE).
-                get(LOCAL_APP_URL + "/" + BLACKLIST_NAME_IBAN + "/" + "dE"+BLACKLISTED_IBAN_WITHOUT_COUNTRY );
+                contentType(MediaType.APPLICATION_JSON).
+                get(ApplicationURL.LOCAL.getAppURL() + "/" + BLACKLIST_NAME_IBAN + "/" + "dE"+BLACKLISTED_IBAN_WITHOUT_COUNTRY );
     }
 
 }
