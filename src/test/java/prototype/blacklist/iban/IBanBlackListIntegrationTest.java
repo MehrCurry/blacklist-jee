@@ -5,6 +5,7 @@
  */
 package prototype.blacklist.iban;
 
+import prototype.blacklist.AbstractBlacklistIntegrationTest;
 import org.junit.Before;
 import org.junit.Test;
 import prototype.blacklist.boundary.Blacklist;

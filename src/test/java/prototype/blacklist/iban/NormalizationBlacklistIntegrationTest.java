@@ -1,5 +1,6 @@
 package prototype.blacklist.iban;
 
+import prototype.blacklist.AbstractBlacklistIntegrationTest;
 import static com.jayway.restassured.RestAssured.expect;
 import org.junit.Test;
 import prototype.blacklist.boundary.Blacklist;
