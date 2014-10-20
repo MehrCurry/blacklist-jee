@@ -8,16 +8,12 @@ import prototype.blacklist.boundary.Blacklist;
  *
  * @author AN
  */
-public class NormalizationBlacklistIntegrationTest {
+public class NormalizationBlacklistIntegrationTest extends AbstractBlacklistIntegrationTest {
 
-    private static final String LOCAL_APP_URL = "http://localhost:8080/blacklist-jee7/resources/blacklist";
-    
     private static final String BLACKLIST_NAME_IBAN = "iban";
     
     private static final String BLACKLISTED_IBAN_WITHOUT_COUNTRY = "90208110080000001039531801";
     
-    private static final String DEFAULT_CONTENT_TYPE = "application/json;charset=UTF-8";
-
     @Test
     public void expectIbanWithDifferentNotationWillBeNormalized() {
         Blacklist blacklist = new Blacklist(BLACKLIST_NAME_IBAN);

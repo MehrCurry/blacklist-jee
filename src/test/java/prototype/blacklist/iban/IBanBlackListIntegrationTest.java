@@ -14,15 +14,11 @@ import static com.jayway.restassured.RestAssured.*;
  *
  * @author michael
  */
-public class IBanBlackListIntegrationTest {
+public class IBanBlackListIntegrationTest extends AbstractBlacklistIntegrationTest {
 
-    private static final String LOCAL_APP_URL = "http://localhost:8080/blacklist-jee7/resources/blacklist";
-    
     private static final String BLACKLIST_NAME_IBANS = "ibans";
     
     private static final String BLACKLISTED_IBAN = "AL90208110080000001039531801";
-    
-    private static final String DEFAULT_CONTENT_TYPE = "application/json;charset=UTF-8";
     
     
     public IBanBlackListIntegrationTest() {
