@@ -8,7 +8,7 @@
 <body>
 <h1>Add entry</h1>
 <h:form id="form">
-	type<h:inputText id="type" value="#{blacklistentries.type}"/>
+	type<h:inputText id="type" value="#{blacklistentries.name}"/>
 	value<h:inputText id="value" value="#{blacklistentries.value}"/>
 	<h:commandButton value="Add" action="#{blacklistentries.add}"/>
 </h:form>

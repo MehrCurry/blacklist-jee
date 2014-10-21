@@ -25,12 +25,13 @@ public class PermissionResource {
     }
     
     @GET
-    @Path("{type}/{value}")
-    public Response isGranted(@PathParam("type") String type,@PathParam("value") String value) {
-        Query q=em.createNamedQuery("BlacklistEntry.findByType");
-        q.setParameter("type", type);
+    @Path("{name}/{value}")
+    public Response isGranted(@PathParam("name") String name,@PathParam("value") String value) {
+        Query q=em.createNamedQuery("BlacklistEntry.findByNameAndValue");
+        q.setParameter("name", name);
+        q.setParameter("value",value);
         final List results = q.getResultList();
-        if (results.contains(value)) {
+        if (results.size()>0) {
             return Response.status(Response.Status.FORBIDDEN).build();
         } else {
             return Response.status(Response.Status.NO_CONTENT).build();

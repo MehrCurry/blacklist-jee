@@ -6,13 +6,14 @@
 package prototype.blacklist.entity;
 
 import java.io.Serializable;
-import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.Version;
+import lombok.Data;
 
 @MappedSuperclass
+@Data
 public abstract class AbstractEntity implements Serializable {
     protected static final long serialVersionUID = 1L;
 

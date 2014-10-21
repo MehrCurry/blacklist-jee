@@ -6,7 +6,6 @@
 package prototype.blacklist.entity;
 
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -15,8 +14,6 @@ import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import com.sun.istack.NotNull;
-import javax.inject.Inject;
-import javax.persistence.PrePersist;
 import lombok.Data;
 
 /**
@@ -31,25 +28,28 @@ import lombok.Data;
 @NamedQueries({
     @NamedQuery(name = "BlacklistEntry.findAll", query = "SELECT ble FROM BlacklistEntry ble"),
     @NamedQuery(name = "BlacklistEntry.findBlacklistEntryId", query = "SELECT ble FROM BlacklistEntry ble WHERE ble.id = :blacklistEntryId"),
-    @NamedQuery(name = "BlacklistEntry.findByType", query = "SELECT ble FROM BlacklistEntry ble WHERE ble.type = :type"),
+    @NamedQuery(name = "BlacklistEntry.findByName", query = "SELECT ble FROM BlacklistEntry ble WHERE ble.name = :name"),
     @NamedQuery(name = "BlacklistEntry.findByValue", query = "SELECT ble FROM BlacklistEntry ble WHERE ble.value = :value"),
-    @NamedQuery(name = "BlacklistEntry.findByTypeAndValue", query = "SELECT ble FROM BlacklistEntry ble WHERE ble.type = :type AND ble.value = :value")})
-public class BlacklistEntry extends AbstractEntity {
-    @Inject
-    private Validator validator;
-    
+    @NamedQuery(name = "BlacklistEntry.findByNameAndValue", query = "SELECT ble FROM BlacklistEntry ble WHERE ble.name = :name AND ble.value = :value")})
+public class BlacklistEntry extends AbstractEntity {    
     @Size(max = 30)
     @NotNull
-    @Column(name = "TYPE")
-    private String type;
+    private String name;
     
     @Size(max = 40)
     @NotNull
-    @Column(name = "VALUE")
     private String value;
+
+    public BlacklistEntry() {
+    }
+
+    public BlacklistEntry(String name, String value) {
+        this.name = name;
+        this.value = value;
+    }
     
-    @PrePersist
+    
     public boolean isValid() {
-    	return validator.isValid(this);
+        return true && (name != null && value != null);
     }
 }

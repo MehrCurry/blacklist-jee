@@ -29,16 +29,16 @@ import prototype.blacklist.entity.BlacklistEntry;
 @RequestScoped
 public class BlacklistEntries {
 
-	private String type;
+	private String name;
 	private String value;
 	
 	
-	public String getType() {
-		return type;
+	public String getName() {
+		return name;
 	}
 
-	public void setType(String type) {
-		this.type = type;
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	public String getValue() {
@@ -82,9 +82,7 @@ public class BlacklistEntries {
 
 		WebTarget target = client.target(getApplicationUri()
 				+ "/resources/blacklist/entry");
-		BlacklistEntry entry = new BlacklistEntry();
-		entry.setType(type);
-		entry.setValue(value);
+		BlacklistEntry entry = new BlacklistEntry(name,value);
 		Entity<?> entity = Entity.json(entry);
 		target.request().post(entity);
 	}

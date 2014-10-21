@@ -14,11 +14,11 @@ public class ValidBlacklistEntryValidator implements ConstraintValidator<ValidBl
 	@Override
 	public boolean isValid(BlacklistEntry entry,
 			ConstraintValidatorContext context) {
-		return entry.isValid() && createValidator(entry.getType()).isValid(entry.getValue());
+		return entry.isValid() && createValidator(entry.getName()).isValid(entry.getValue());
 	}
 
-	private Validator<String> createValidator(String type) {
-		switch (type) {
+	private Validator<String> createValidator(String name) {
+		switch (name) {
 		case "iban":
 			return new Validator<String>() {
 				@Override

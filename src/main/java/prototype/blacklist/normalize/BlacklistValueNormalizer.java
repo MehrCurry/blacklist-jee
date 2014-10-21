@@ -12,13 +12,13 @@ import prototype.blacklist.entity.BlacklistEntry;
 public class BlacklistValueNormalizer {
     
     public void normalize(final BlacklistEntry entry) {
-        final String type = entry.getType();
-        final Normalizer normalizer = createNormalizerByType(type);
+        final String name = entry.getName();
+        final Normalizer normalizer = createNormalizerByName(name);
         entry.setValue(normalizer.normalize(entry.getValue()));
     }
     
-    public Normalizer createNormalizerByType(final String type) {
-        switch (type) {
+    public Normalizer createNormalizerByName(final String name) {
+        switch (name) {
             case "iban":
                     return new IBANNormalizer();
             default:
