@@ -33,7 +33,7 @@ private static Validator validator;
     public void an_empty_instance_must_not_be_valid() {
         BlacklistEntry cut=new BlacklistEntry();
         final Set<ConstraintViolation<BlacklistEntry>> violations = validator.validate(cut);
-        assertThat(violations.size()).isGreaterThan(0)
+        assertThat(violations.size()).isGreaterThan(0);
     }
 
     @Test
