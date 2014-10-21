@@ -50,6 +50,6 @@ public class BlacklistEntry extends AbstractEntity {
     
     
     public boolean isValid() {
-        return true && (name != null && value != null);
+        return name != null && value != null;
     }
 }
