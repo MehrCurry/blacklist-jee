@@ -38,10 +38,8 @@ public class Index {
         this.client = ClientBuilder.newBuilder().build();
         this.target = this.client.target(getApplicationUri() + "/resources/blacklist");
 
-        GenericType<Collection<String>> type = new GenericType<Collection<String>>(){};
-        Collection<String> col = this.target.request().get(type);
-        blacklistUrls = new ArrayList<>(col);
-        return blacklistUrls;
+        GenericType<List<String>> type = new GenericType<List<String>>(){};
+        return this.target.request(MediaType.APPLICATION_JSON).get(type);
     }
 
     /**
