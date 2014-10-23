@@ -1,11 +1,14 @@
 package prototype.blacklist.boundary;
 
+import java.net.URI;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
+import javax.json.Json;
+import javax.json.JsonArrayBuilder;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
@@ -19,6 +22,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
+import static prototype.blacklist.boundary.BlacklistEntryResource.BLACKLIST;
 
 import prototype.blacklist.entity.BlacklistEntry;
 import prototype.blacklist.normalize.BlacklistValueNormalizer;
@@ -32,6 +36,9 @@ import prototype.blacklist.normalize.BlacklistValueNormalizer;
 @Stateless
 @Path("blacklist")
 public class BlacklistService {
+
+    private static final String ENTRY_URI_TEMPLATE = "entry";
+    private static final String ENTRIES_URI_TEMPLATE = "entries";
 
     /**
      * The URI of this service. (e.g.
@@ -87,9 +94,14 @@ public class BlacklistService {
      * an entry point of the service.
      */
     @GET
-    public Collection<String> getBlacklistOverview() {
+    public Response getBlacklistOverview() {
+        JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
         final List<BlacklistEntry> results = entityManager.createNamedQuery("BlacklistEntry.findAll").getResultList();
-        return results.stream().map(b -> uri.getBaseUri().toString() + "blacklist/" + b.getName()).collect(Collectors.toList());
+        results.forEach(entry -> {
+            URI entryUri = uri.getBaseUriBuilder().path(BLACKLIST).path(ENTRY_URI_TEMPLATE).path(entry.getId().toString()).build();
+            arrayBuilder.add(entryUri.toString());
+        });
+        return Response.ok().entity(arrayBuilder.build()).build();
     }
 
     /**
@@ -104,9 +116,9 @@ public class BlacklistService {
             @PathParam("blacklistName") String blacklistName) {
         throw new UnsupportedOperationException("operation must be converted to use real entity");
     }
-    
+
     @POST
-    public void addEntry(BlacklistEntry blacklistEntry){
+    public void addEntry(BlacklistEntry blacklistEntry) {
         normalizer.normalize(blacklistEntry);
         entityManager.persist(blacklistEntry);
     }
@@ -115,7 +127,7 @@ public class BlacklistService {
     @Path("blacklistEntries/{name}/{value}")
     public void addBlacklistEntry(@PathParam("name") String name,
             @PathParam("value") String value) {
-        BlacklistEntry blacklistEntry = new BlacklistEntry(name,value);
+        BlacklistEntry blacklistEntry = new BlacklistEntry(name, value);
         normalizer.normalize(blacklistEntry);
         entityManager.persist(blacklistEntry);
     }
