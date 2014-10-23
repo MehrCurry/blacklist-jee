@@ -104,6 +104,12 @@ public class BlacklistService {
             @PathParam("blacklistName") String blacklistName) {
         throw new UnsupportedOperationException("operation must be converted to use real entity");
     }
+    
+    @POST
+    public void addEntry(BlacklistEntry blacklistEntry){
+        normalizer.normalize(blacklistEntry);
+        entityManager.persist(blacklistEntry);
+    }
 
     @POST
     @Path("blacklistEntries/{name}/{value}")

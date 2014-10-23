@@ -13,8 +13,13 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import javax.faces.FacesException;
+import javax.ws.rs.core.GenericEntity;
+import javax.ws.rs.core.GenericType;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import org.codehaus.jackson.jaxrs.JacksonJsonProvider;
 
 /**
@@ -31,10 +36,12 @@ public class Index {
     private WebTarget target;
 
     public List<String> getBlacklistUrls() {
-        this.client = ClientBuilder.newBuilder().register(JacksonJsonProvider.class).build();
+        this.client = ClientBuilder.newBuilder().build();
         this.target = this.client.target(getApplicationUri() + "/resources/blacklist");
-        Collection<String> list = this.target.request().get(Collection.class);
-        this.blacklistUrls = new ArrayList<>(list);
+
+        GenericType<Collection<String>> type = new GenericType<Collection<String>>(){};
+        Collection<String> col = this.target.request().get(type);
+        blacklistUrls = new ArrayList<>(col);
         return blacklistUrls;
     }
 
