@@ -30,11 +30,11 @@ public class Index {
 
     private WebTarget target;
 
-    public void setBlacklistUrls(List<String> blacklistUrls) {
-        this.blacklistUrls = blacklistUrls;
-    }
-
     public List<String> getBlacklistUrls() {
+        this.client = ClientBuilder.newBuilder().register(JacksonJsonProvider.class).build();
+        this.target = this.client.target(getApplicationUri() + "/resources/blacklist");
+        Collection<String> list = this.target.request().get(Collection.class);
+        this.blacklistUrls = new ArrayList<>(list);
         return blacklistUrls;
     }
 
@@ -54,19 +54,10 @@ public class Index {
         }
     }
 
-    @PostConstruct
-    public void init(){
-        this.client = ClientBuilder.newBuilder().register(JacksonJsonProvider.class).build();
-        this.target = this.client.target(getApplicationUri() + "/resources/blacklist");
-        Collection<String> list = this.target.request().get(Collection.class);
-        this.blacklistUrls = new ArrayList<>(list);        
-    }
-
     public void delete(String url){
         this.client = ClientBuilder.newClient();
         this.target = this.client.target(url);
         this.target.request().delete();
-        init();
     }
 
 }
