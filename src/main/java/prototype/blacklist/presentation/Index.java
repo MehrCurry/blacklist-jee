@@ -20,7 +20,6 @@ import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import org.codehaus.jackson.jaxrs.JacksonJsonProvider;
 
 /**
  * Created by jbeye on 15.10.14.

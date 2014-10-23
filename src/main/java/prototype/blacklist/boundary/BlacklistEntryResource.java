@@ -19,6 +19,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
@@ -69,7 +70,6 @@ public class BlacklistEntryResource {
 
     @GET
     @Path("example")
-    @Produces("application/json")
     public BlacklistEntry example() {
         return new BlacklistEntry("foo", "bar");
     }

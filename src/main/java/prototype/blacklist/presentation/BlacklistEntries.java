@@ -17,7 +17,6 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 
-import org.codehaus.jackson.jaxrs.JacksonJsonProvider;
 
 import prototype.blacklist.boundary.BlacklistEntryResource;
 import prototype.blacklist.entity.BlacklistEntry;
@@ -63,8 +62,7 @@ public class BlacklistEntries {
 	}
 
 	public List<String> getList() {
-		Client client = ClientBuilder.newBuilder()
-				.register(JacksonJsonProvider.class).build();
+		Client client = ClientBuilder.newBuilder().build();
 		WebTarget target = client.target(getApplicationUri()
 				+ "/resources/blacklist/entries");
 		JsonArray uris = target.request(MediaType.APPLICATION_JSON).get(
@@ -77,8 +75,7 @@ public class BlacklistEntries {
 	}
 
 	public void add() {
-		Client client = ClientBuilder.newBuilder()
-				.register(JacksonJsonProvider.class).build();
+		Client client = ClientBuilder.newBuilder().build();
 
 		WebTarget target = client.target(getApplicationUri()
 				+ "/resources/blacklist/entry");
