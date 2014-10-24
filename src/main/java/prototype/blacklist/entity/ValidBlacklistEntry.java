@@ -20,4 +20,5 @@ public @interface ValidBlacklistEntry {
     Class<?>[] groups() default {};
 
     Class<? extends Payload>[] payload() default {};
+
 }

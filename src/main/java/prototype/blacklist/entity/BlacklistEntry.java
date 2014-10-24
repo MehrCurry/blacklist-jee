@@ -6,10 +6,16 @@
 package prototype.blacklist.entity;
 
 
+import java.util.Set;
 import javax.persistence.Entity;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
+import javax.validation.Validation;
+import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -24,36 +30,20 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "BlacklistEntry.findAll", query = "SELECT ble FROM BlacklistEntry ble"),
-    @NamedQuery(name = "BlacklistEntry.findBlacklistEntryId", query = "SELECT ble FROM BlacklistEntry ble WHERE ble.id = :blacklistEntryId"),
-    @NamedQuery(name = "BlacklistEntry.findByName", query = "SELECT ble FROM BlacklistEntry ble WHERE ble.name = :name"),
-    @NamedQuery(name = "BlacklistEntry.findByValue", query = "SELECT ble FROM BlacklistEntry ble WHERE ble.value = :value"),
-    @NamedQuery(name = "BlacklistEntry.findByNameAndValue", query = "SELECT ble FROM BlacklistEntry ble WHERE ble.name = :name AND ble.value = :value")})
-public class BlacklistEntry extends AbstractEntity {    
-    @Size(max = 30)
-    @NotNull
-    private String name;
-    
+    @NamedQuery(name = "BlacklistEntry.findByValue", query = "SELECT ble FROM BlacklistEntry ble WHERE ble.value = :value")
+})
+public abstract class BlacklistEntry extends AbstractEntity {        
     @Size(max = 40)
     @NotNull
-    private String value;
+    protected String value;
 
     public BlacklistEntry() {
     }
 
-    public BlacklistEntry(String name, String value) {
-        this.name = name;
+    public BlacklistEntry(String value) {
         this.value = value;
     }
     
-    
-    public boolean isValid() {
-        return name != null && value != null;
-    }
-
-    public String getName() {
-        return name;
-    }
-
     public String getValue() {
         return value;
     }
@@ -61,4 +51,25 @@ public class BlacklistEntry extends AbstractEntity {
     public void setValue(String value) {
         this.value = value;
     }
+    
+    public boolean isValid() {
+        return getErrors().size()==0;
+    }
+    
+    public void validate() {
+        Set<ConstraintViolation<BlacklistEntry>> errors = getErrors();
+        if (errors.size()>0)
+            throw new ConstraintViolationException(errors);        
+    }
+
+    public Set<ConstraintViolation<BlacklistEntry>> getErrors() {
+        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+        Validator validator = factory.getValidator();
+        Set<ConstraintViolation<BlacklistEntry>> errors = validator.validate(this);
+        return errors;        
+    }
+    
+    public abstract boolean matches(String other);
+    
+    public abstract void normalize();
 }

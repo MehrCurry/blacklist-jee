@@ -1,39 +1,28 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package prototype.blacklist.entity;
 
+import java.lang.annotation.Annotation;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
-import org.apache.commons.validator.routines.checkdigit.IBANCheckDigit;
+/**
+ *
+ * @author guido
+ */
+class ValidBlacklistEntryValidator implements ConstraintValidator {
 
-public class ValidBlacklistEntryValidator implements ConstraintValidator<ValidBlacklistEntry, BlacklistEntry> {
+    @Override
+    public void initialize(Annotation constraintAnnotation) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 
-	@Override
-	public void initialize(ValidBlacklistEntry constraintAnnotation) {
-	}
-
-	@Override
-	public boolean isValid(BlacklistEntry entry,
-			ConstraintValidatorContext context) {
-		return entry.isValid() && createValidator(entry.getName()).isValid(entry.getValue());
-	}
-
-	private Validator<String> createValidator(String name) {
-		switch (name) {
-		case "iban":
-			return new Validator<String>() {
-				@Override
-				public boolean isValid(String iban) {
-					return new IBANCheckDigit().isValid(iban);
-				}
-			};
-		default:
-			return new Validator<String>() {
-				@Override
-				public boolean isValid(String object) {
-					return true;
-				}
-			};
-		}
-	}
-	
+    @Override
+    public boolean isValid(Object value, ConstraintValidatorContext context) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    
 }
