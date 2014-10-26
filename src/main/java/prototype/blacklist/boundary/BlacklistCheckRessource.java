@@ -1,6 +1,7 @@
 package prototype.blacklist.boundary;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -20,7 +21,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
 import prototype.blacklist.entity.BlacklistEntry;
-import prototype.blacklist.normalize.BlacklistCheckValueNormalizer;
+import prototype.blacklist.normalize.BlacklistValueNormalizer;
 
 import com.sun.messaging.jmq.io.Status;
 
@@ -40,7 +41,7 @@ public class BlacklistCheckRessource {
     private Validator validator;
 
     @Inject
-    private BlacklistCheckValueNormalizer normalizer;
+    private BlacklistValueNormalizer normalizer;
     
     
     @GET
@@ -53,12 +54,21 @@ public class BlacklistCheckRessource {
             ).build();
         }
 
-        normalizer.normalize(check);
+        Set<ConstraintViolation<BlacklistEntry>> entryViolations = new HashSet<ConstraintViolation<BlacklistEntry>>();
+        for(BlacklistEntry entry : check.getParametersToCheck()){
+        	entryViolations.addAll(validator.validate(entry));
+        	normalizer.normalize(entry);
+        }
         
+        if (!entryViolations.isEmpty()) {
+            return Response.status(Response.Status.BAD_REQUEST).header("X-Validation-Errors",
+            		entryViolations.stream().map(v -> v.getPropertyPath() + " " + v.getMessage()).collect(Collectors.toList())
+            ).build();
+        }
+                
         List<BlacklistEntry> listedEntries = new ArrayList<BlacklistEntry>();
-        Map<String, String> parametersToCheck = check.getParametersToCheck();
-        for(Entry<String,String> checkEnty : parametersToCheck.entrySet()){
-        	final List<BlacklistEntry> blacklistEntries = entityManager.createNamedQuery("BlacklistEntry.findByNameAndValue").setParameter(":name",checkEnty.getKey() ).setParameter(":value",checkEnty.getValue()).getResultList();
+        for(BlacklistEntry entry : check.getParametersToCheck()){
+        	final List<BlacklistEntry> blacklistEntries = entityManager.createNamedQuery("BlacklistEntry.findByNameAndValue").setParameter(":name",entry.getName() ).setParameter(":value",entry.getValue()).getResultList();
         	listedEntries.addAll(blacklistEntries);
         }
         	                 

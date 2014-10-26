@@ -1,18 +1,21 @@
 package prototype.blacklist.boundary;
 
+import java.util.List;
 import java.util.Map;
 
 import javax.xml.bind.annotation.XmlElement;
 
+import prototype.blacklist.entity.BlacklistEntry;
+
 public class BlacklistCheck {
 
 	@XmlElement(required=true)
-	private Map<String,String> parametersToCheck;
+	private List<BlacklistEntry> parametersToCheck;
 	
 	public BlacklistCheck() {		
 	}
 	
-	public Map<String, String> getParametersToCheck() {
+	public List<BlacklistEntry> getParametersToCheck() {
 		return parametersToCheck;
 	}
 }
