@@ -1,15 +1,7 @@
 package prototype.blacklist.entity;
 
-
-import java.util.Set;
-import javax.validation.ConstraintViolation;
-import javax.validation.ConstraintViolationException;
-import javax.validation.Validation;
 import static org.assertj.core.api.Assertions.assertThat;
-import org.junit.BeforeClass;
 import org.junit.Test;
-import javax.validation.Validator;
-import javax.validation.ValidatorFactory;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -21,25 +13,62 @@ import javax.validation.ValidatorFactory;
  * @author Guido.Zockoll
  */
 public class BlacklistEntryTest {
-private static Validator validator;
 
-   @BeforeClass
-   public static void setUp() {
-      ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-      validator = factory.getValidator();
-   }
-   
     @Test
     public void an_empty_instance_must_not_be_valid() {
-        BlacklistEntry cut=new BlacklistEntry();
-        final Set<ConstraintViolation<BlacklistEntry>> violations = validator.validate(cut);
-        assertThat(violations.size()).isGreaterThan(0);
+        BlacklistEntry cut = new BlacklistEntry() {
+
+            @Override
+            public boolean matches(String other) {
+                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            }
+
+            @Override
+            protected String normalize(String aValue) {
+                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            }
+        };
+        
+        assertThat(cut.isValid()).isFalse();
+        assertThat(cut.getErrors().size()).isGreaterThan(0);
     }
 
     @Test
-    public void an_instance_with_name_and_value_is_valid() {
-        BlacklistEntry cut=new BlacklistEntry("foo","bar");
-        final Set<ConstraintViolation<BlacklistEntry>> violations = validator.validate(cut);
-        assertThat(violations.size()).isEqualTo(0);
+    public void an_instance_with_value_is_valid() {
+        BlacklistEntry cut = new BlacklistEntry(null,"bar") {
+
+            @Override
+            public boolean matches(String other) {
+                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            }
+
+            @Override
+            protected String normalize(String aValue) {
+                return aValue;
+            }
+        };
+
+        assertThat(cut.isValid()).isTrue();
+        assertThat(cut.getErrors().size()).isEqualTo(0);
     }
+
+    @Test
+    public void an_instance_with_a_too_long_value_must_be_invalid() {
+        BlacklistEntry cut = new BlacklistEntry(null,"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa") {
+
+            @Override
+            public boolean matches(String other) {
+                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            }
+
+            @Override
+            protected String normalize(String aValue) {
+                return aValue;
+            }
+        };
+
+        assertThat(cut.isValid()).isFalse();
+        assertThat(cut.getErrors().size()).isGreaterThan(0);
+    }
+
 }

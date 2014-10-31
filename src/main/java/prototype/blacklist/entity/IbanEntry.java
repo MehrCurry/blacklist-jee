@@ -15,21 +15,25 @@ import org.apache.commons.validator.routines.checkdigit.IBANCheckDigit;
 @Entity
 public class IbanEntry extends BlacklistEntry  {
 
-    public IbanEntry(String value) {
-        super(IbanEntry.normalize(value));
+    public IbanEntry() {
+    }
+
+    IbanEntry(String value) {
+        super(null,value);
+    }
+
+    
+    public IbanEntry(Blacklist blacklist,String value) {
+        super(blacklist,value);
     }
 
     @Override
     public boolean matches(String other) {
-        return value.equals(IbanEntry.normalize(other));
+        return value.equals(normalize(other));
     }
 
     @Override
-    public void normalize() {
-        value=IbanEntry.normalize(value);
-    }
-    
-    public static String normalize(String value) {
+    public String normalize(String value) {
         return value.trim().toUpperCase();
     }
 
@@ -37,6 +41,4 @@ public class IbanEntry extends BlacklistEntry  {
     public boolean isValid() {
         return super.isValid() && new IBANCheckDigit().isValid(value);
     }
-    
-    
 }

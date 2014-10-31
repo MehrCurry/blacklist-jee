@@ -8,6 +8,8 @@ package prototype.blacklist.entity;
 
 import java.util.Set;
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
@@ -20,13 +22,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 
-/**
- *
- * @author Rabe
- */
-@ValidBlacklistEntry
 @Entity
-@Table(name = "BLACKLISTENTRY")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "BlacklistEntry.findAll", query = "SELECT ble FROM BlacklistEntry ble"),
@@ -36,12 +32,12 @@ public abstract class BlacklistEntry extends AbstractEntity {
     @Size(max = 40)
     @NotNull
     protected String value;
-
+    
     public BlacklistEntry() {
     }
 
-    public BlacklistEntry(String value) {
-        this.value = value;
+    public BlacklistEntry(Blacklist blacklist,String value) {
+        this.value = normalize(value);
     }
     
     public String getValue() {
@@ -51,25 +47,8 @@ public abstract class BlacklistEntry extends AbstractEntity {
     public void setValue(String value) {
         this.value = value;
     }
-    
-    public boolean isValid() {
-        return getErrors().size()==0;
-    }
-    
-    public void validate() {
-        Set<ConstraintViolation<BlacklistEntry>> errors = getErrors();
-        if (errors.size()>0)
-            throw new ConstraintViolationException(errors);        
-    }
-
-    public Set<ConstraintViolation<BlacklistEntry>> getErrors() {
-        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-        Validator validator = factory.getValidator();
-        Set<ConstraintViolation<BlacklistEntry>> errors = validator.validate(this);
-        return errors;        
-    }
-    
+        
     public abstract boolean matches(String other);
     
-    public abstract void normalize();
+    protected abstract String normalize(String aValue);
 }

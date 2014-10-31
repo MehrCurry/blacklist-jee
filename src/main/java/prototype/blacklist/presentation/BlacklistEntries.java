@@ -18,8 +18,8 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 
 
-import prototype.blacklist.boundary.BlacklistEntryResource;
 import prototype.blacklist.entity.BlacklistEntry;
+import prototype.blacklist.entity.GenericEntry;
 
 /**
  * Bean for "faces/blacklistentries.xhtml". Provides client functionality for the {@link BlacklistEntryResource}.
@@ -79,7 +79,7 @@ public class BlacklistEntries {
 
 		WebTarget target = client.target(getApplicationUri()
 				+ "/resources/blacklist/entry");
-		BlacklistEntry entry = new BlacklistEntry(name,value);
+		BlacklistEntry entry = new GenericEntry(null,value);
 		Entity<?> entity = Entity.json(entry);
 		target.request().post(entity);
 	}

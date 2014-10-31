@@ -14,8 +14,11 @@ import javax.persistence.Entity;
 @Entity
 public class GenericEntry extends BlacklistEntry {
 
-    public GenericEntry(String value) {
-        super(value);
+    public GenericEntry() {
+    }
+
+    public GenericEntry(Blacklist blacklist,String value) {
+        super(blacklist,value);
     }
 
     @Override
@@ -24,6 +27,7 @@ public class GenericEntry extends BlacklistEntry {
     }
 
     @Override
-    public void normalize() {
-    }    
+    protected String normalize(String aValue) {
+        return aValue;
+    }       
 }

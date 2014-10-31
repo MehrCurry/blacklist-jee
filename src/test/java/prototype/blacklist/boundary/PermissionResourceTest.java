@@ -5,19 +5,21 @@
  */
 package prototype.blacklist.boundary;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import javax.persistence.EntityManager;
-import javax.persistence.Query;
-import javax.ws.rs.core.Response.Status;
-import static org.assertj.core.api.Assertions.*;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Matchers;
 import org.mockito.Mockito;
-import prototype.blacklist.entity.BlacklistEntry;
+import prototype.blacklist.entity.Blacklist;
+
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
+import javax.ws.rs.core.Response.Status;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class PermissionResourceTest {
     private PermissionResource cut;
@@ -40,21 +42,31 @@ public class PermissionResourceTest {
     }
 
     @Test
-    public void a_known_type_without_entries_should_result_in_an_no_content_reponse() {
+    public void an_unknown_blacklist_should_give_a_bad_request_response() {
         EntityManager em=createEntityManagerMock(Collections.EMPTY_LIST);
         cut.setEm(em);
     
-        assertThat(cut.isGranted("foo", "bar").getStatus()).isEqualTo(Status.NO_CONTENT.getStatusCode());
+        assertThat(cut.isGranted("foo", "bar").getStatus()).isEqualTo(Status.BAD_REQUEST.getStatusCode());
     }
 
     @Test
-    public void a_known_type_with_an_matching_entries_should_result_in_a_forbidden_reponse() {
-        EntityManager em=createEntityManagerMock(Arrays.asList(new BlacklistEntry[]{
-            new BlacklistEntry("foo","bar")
+    public void a_known_blacklist_with_an_matching_entry_should_result_in_a_forbidden_reponse() {
+        EntityManager em=createEntityManagerMock(Arrays.asList(new Blacklist[]{
+            new Blacklist("foo").addEntry("bar")
         }));
         cut.setEm(em);
         
         assertThat(cut.isGranted("foo", "bar").getStatus()).isEqualTo(Status.FORBIDDEN.getStatusCode());
+    }
+
+    @Test
+    public void a_known_blacklist_with_an_non_matching_entry_should_result_in_a_empty_result() {
+        EntityManager em=createEntityManagerMock(Arrays.asList(new Blacklist[]{
+            new Blacklist("foo").addEntry("baz")
+        }));
+        cut.setEm(em);
+        
+        assertThat(cut.isGranted("foo", "bar").getStatus()).isEqualTo(Status.NO_CONTENT.getStatusCode());
     }
 
 }
