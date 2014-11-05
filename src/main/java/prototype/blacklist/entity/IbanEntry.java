@@ -6,6 +6,7 @@
 package prototype.blacklist.entity;
 
 import javax.persistence.Entity;
+import javax.xml.bind.annotation.XmlRootElement;
 import org.apache.commons.validator.routines.checkdigit.IBANCheckDigit;
 
 /**
@@ -13,6 +14,7 @@ import org.apache.commons.validator.routines.checkdigit.IBANCheckDigit;
  * @author guido
  */
 @Entity
+@XmlRootElement
 public class IbanEntry extends BlacklistEntry  {
 
     public IbanEntry() {
@@ -34,7 +36,7 @@ public class IbanEntry extends BlacklistEntry  {
 
     @Override
     public String normalize(String value) {
-        return value.trim().toUpperCase();
+        return value.replaceAll("\\W", "").toUpperCase();
     }
 
     @Override

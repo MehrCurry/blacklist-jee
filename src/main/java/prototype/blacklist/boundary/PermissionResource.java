@@ -5,11 +5,16 @@
  */
 package prototype.blacklist.boundary;
 
+import java.util.Collections;
+import java.util.List;
+import javax.annotation.PostConstruct;
 import prototype.blacklist.entity.Blacklist;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
+import javax.transaction.Transactional;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -29,14 +34,12 @@ public class PermissionResource {
     @GET
     @Path("{name}/{value}")
     public Response isGranted(@PathParam("name") String name,@PathParam("value") String value) {
-        Object o=em.find(Blacklist.class, 1L);
-        return Response.ok().build();
-        // Query q=em.createNamedQuery("hurz");
-        // q.setParameter("name", name);
-        /*
+        Query q=em.createNamedQuery("hurz");
+        q.setParameter("name", name);
+
         final List results = Collections.EMPTY_LIST;
         if (results.isEmpty()) {
-            return Response.status(Response.Status.BAD_REQUEST).header("X-Info", "unknown blacklist: " + name).build();
+            return Response.status(Response.Status.NOT_FOUND).header("X-Info", "unknown blacklist: " + name).build();
         }
         Blacklist blacklist = (Blacklist) results.get(0);
    
@@ -45,6 +48,5 @@ public class PermissionResource {
         } else {
             return Response.status(Response.Status.NO_CONTENT).build();
         }
-        */
     }
 }

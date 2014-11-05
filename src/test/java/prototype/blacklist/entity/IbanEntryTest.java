@@ -25,5 +25,9 @@ public class IbanEntryTest {
         entry=new IbanEntry("de12500105170648489890");
         assertThat(entry.getValue()).isEqualTo("DE12500105170648489890");
 
+        entry=new IbanEntry(" d e1 250 01 05170 648 489 890    ");
+        assertThat(entry.getValue()).isEqualTo("DE12500105170648489890");
+
+        assertThat(new IbanEntry().normalize("   DE1 2500105170 648489 890")).isEqualTo("DE12500105170648489890");
     }    
 }

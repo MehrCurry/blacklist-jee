@@ -6,18 +6,10 @@
 package prototype.blacklist.entity;
 
 
-import java.util.Set;
 import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.MappedSuperclass;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.Table;
-import javax.validation.ConstraintViolation;
-import javax.validation.ConstraintViolationException;
-import javax.validation.Validation;
-import javax.validation.Validator;
-import javax.validation.ValidatorFactory;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -36,6 +28,10 @@ public abstract class BlacklistEntry extends AbstractEntity {
     public BlacklistEntry() {
     }
 
+    public BlacklistEntry(String value) {
+        this.value = normalize(value);
+    }
+ 
     public BlacklistEntry(Blacklist blacklist,String value) {
         this.value = normalize(value);
     }

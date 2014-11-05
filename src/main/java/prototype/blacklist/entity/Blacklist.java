@@ -14,7 +14,6 @@ import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
-import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.NotNull;
@@ -45,6 +44,11 @@ public class Blacklist extends AbstractEntity {
         this.name = name;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    
     // Default visibility for unit tests
     // Do not use outside of tests
     List<GenericEntry> getGenericEentries() {
@@ -58,8 +62,9 @@ public class Blacklist extends AbstractEntity {
     public Blacklist addEntry(String value) {
         // This is a bit ugly since GenericEntry is a bit ugly too
         // If we have more meaningful blacklist entry type we should use a factory
-        if (isAnIban(value)) {
-            ibanEentries.add(new IbanEntry(this,value));
+        IbanEntry entry=new IbanEntry(value);
+        if (entry.isValid()) {
+            ibanEentries.add(entry);
         } else {
             genericEentries.add(new GenericEntry(this,value));
         }
@@ -72,8 +77,8 @@ public class Blacklist extends AbstractEntity {
     
     private boolean matches(List<? extends BlacklistEntry> alist,String aValue) {
         // return !alist.stream().filter(e -> e.matches(aValue)).collect(Collectors.<BlacklistEntry>toList()).isEmpty();
-        // return !alist.stream().filter(new MatcherPredicate(aValue)).collect(Collectors.<BlacklistEntry>toList()).isEmpty();
-        return false;    
+        return !alist.stream().filter(new MatcherPredicate(aValue)).collect(Collectors.<BlacklistEntry>toList()).isEmpty();
+        // return false;    
     }
 
     private boolean isAnIban(String value) {
