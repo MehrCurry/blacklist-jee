@@ -13,8 +13,6 @@ import org.springframework.context.annotation.Import;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.data.rest.webmvc.config.RepositoryRestMvcConfiguration;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 @Configuration
@@ -23,12 +21,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Import(RepositoryRestMvcConfiguration.class)
 @EnableAutoConfiguration
 public class BlacklistApplication {
-
-    @RequestMapping("/")
-    @ResponseBody
-    String home() {
-        return "Hello World!";
-    }
 
     public static void main(String[] args) throws Exception {
         SpringApplication.run(BlacklistApplication.class, args);
