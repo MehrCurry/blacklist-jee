@@ -30,11 +30,11 @@ public class Blacklist extends AbstractEntity {
     private String name;
 
     @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
-    @JoinColumn(name = "blacklist_id")
+    @JoinColumn(name = "blacklist")
     private List<GenericEntry> genericEentries=new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
-    @JoinColumn(name = "blacklist_id")
+    @JoinColumn(name = "blacklist")
     private List<IbanEntry> ibanEentries=new ArrayList<>();
 
     public Blacklist() {
@@ -62,7 +62,7 @@ public class Blacklist extends AbstractEntity {
     public Blacklist addEntry(String value) {
         // This is a bit ugly since GenericEntry is a bit ugly too
         // If we have more meaningful blacklist entry type we should use a factory
-        IbanEntry entry=new IbanEntry(value);
+        IbanEntry entry=new IbanEntry(this,value);
         if (entry.isValid()) {
             ibanEentries.add(entry);
         } else {

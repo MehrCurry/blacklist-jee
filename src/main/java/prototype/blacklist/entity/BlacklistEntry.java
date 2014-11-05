@@ -7,7 +7,7 @@ package prototype.blacklist.entity;
 
 
 import javax.persistence.Entity;
-import javax.persistence.MappedSuperclass;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.validation.constraints.NotNull;
@@ -28,14 +28,23 @@ public abstract class BlacklistEntry extends AbstractEntity {
     public BlacklistEntry() {
     }
 
-    public BlacklistEntry(String value) {
-        this.value = normalize(value);
-    }
- 
     public BlacklistEntry(Blacklist blacklist,String value) {
+        this.blacklist = blacklist;
         this.value = normalize(value);
     }
-    
+
+    @ManyToOne(optional = false)
+    @NotNull
+    private Blacklist blacklist;
+
+    public Blacklist getBlacklist() {
+        return blacklist;
+    }
+
+    public void setBlacklist(Blacklist blacklist) {
+        this.blacklist = blacklist;
+    }
+
     public String getValue() {
         return value;
     }

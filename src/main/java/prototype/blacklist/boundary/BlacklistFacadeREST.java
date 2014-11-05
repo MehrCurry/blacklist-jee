@@ -5,72 +5,62 @@
  */
 package prototype.blacklist.boundary;
 
-import java.util.List;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import prototype.blacklist.control.BlacklistRepository;
 import prototype.blacklist.entity.Blacklist;
 
+import javax.inject.Inject;
+import javax.transaction.Transactional;
+import java.util.List;
+
 @RestController
-public class BlacklistFacadeREST extends AbstractFacade<Blacklist> {
+@Transactional
+public class BlacklistFacadeREST {
     private static final String PATH = "/resources/blacklists";
 
-    @PersistenceContext
-    private EntityManager em;
+    @Inject
+    private BlacklistRepository repository;
 
-    public BlacklistFacadeREST() {
-        super(Blacklist.class);
-    }
 
     @RequestMapping(value = PATH, method = RequestMethod.POST)
-    @Override
     public void create(Blacklist entity) {
-        super.create(entity);
+        repository.save(entity);
     }
 
-    @RequestMapping(value = PATH +"/{id}", method = RequestMethod.PUT)
+    @RequestMapping(value = PATH + "/{id}", method = RequestMethod.PUT)
     public void edit(@PathVariable Long id, Blacklist entity) {
-        super.edit(entity);
+        entity.setId(id);
+        repository.save(entity);
     }
 
-    @RequestMapping(value = PATH +"/{id}", method = RequestMethod.DELETE)
+    @RequestMapping(value = PATH + "/{id}", method = RequestMethod.DELETE)
     public void remove(@PathVariable Long id) {
-        super.remove(super.find(id));
+        repository.delete(id);
     }
 
-    @RequestMapping(value = PATH +"/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = PATH + "/{id}", method = RequestMethod.GET)
     public Blacklist find(@PathVariable Long id) {
-        return super.find(id);
+        return repository.findOne(id);
     }
 
     @RequestMapping(value = PATH, method = RequestMethod.OPTIONS)
     public Blacklist example() {
         final Blacklist bl = new Blacklist("example").addEntry("Test").addEntry("DE89 3704 0044 0532 0130 00");
-        super.create(bl);
-        return bl;
+        return repository.save(bl);
     }
-    
+
     @RequestMapping(value = PATH, method = RequestMethod.GET)
     public List<Blacklist> findAll() {
-        return super.findAll();
+        example();
+        return repository.findAll();
     }
 
-    @RequestMapping(value = PATH +"/{from}/{to}", method = RequestMethod.GET)
-    public List<Blacklist> findRange(@PathVariable Integer from, @PathVariable Integer to) {
-        return super.findRange(new int[]{from, to});
-    }
-
-    @RequestMapping(value = PATH +"/count", method = RequestMethod.GET)
+    @RequestMapping(value = PATH + "/count", method = RequestMethod.GET)
     public String countREST() {
-        return String.valueOf(super.count());
-    }
 
-    @Override
-    protected EntityManager getEntityManager() {
-        return em;
+        return String.valueOf(repository.count());
     }
-    
 }

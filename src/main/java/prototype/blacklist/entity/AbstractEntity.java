@@ -5,17 +5,10 @@
  */
 package prototype.blacklist.entity;
 
+import javax.persistence.*;
+import javax.validation.*;
 import java.io.Serializable;
 import java.util.Set;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.MappedSuperclass;
-import javax.persistence.Version;
-import javax.validation.ConstraintViolation;
-import javax.validation.ConstraintViolationException;
-import javax.validation.Validation;
-import javax.validation.Validator;
-import javax.validation.ValidatorFactory;
 
 @MappedSuperclass
 public abstract class AbstractEntity implements Serializable {
@@ -35,6 +28,11 @@ public abstract class AbstractEntity implements Serializable {
         return id;
     }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    @Transient
     public Set<ConstraintViolation<AbstractEntity>> getErrors() {
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
         Validator validator = factory.getValidator();
@@ -42,10 +40,13 @@ public abstract class AbstractEntity implements Serializable {
         return errors;
     }
 
+    @Transient
     public boolean isValid() {
         return getErrors().size() == 0;
     }
 
+    @PrePersist
+    @PreUpdate
     public void validate() {
         Set<ConstraintViolation<AbstractEntity>> errors = getErrors();
         if (errors.size() > 0) {

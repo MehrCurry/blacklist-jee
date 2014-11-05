@@ -5,9 +5,10 @@
  */
 package prototype.blacklist.entity;
 
+import org.apache.commons.validator.routines.checkdigit.IBANCheckDigit;
+
 import javax.persistence.Entity;
 import javax.xml.bind.annotation.XmlRootElement;
-import org.apache.commons.validator.routines.checkdigit.IBANCheckDigit;
 
 /**
  *

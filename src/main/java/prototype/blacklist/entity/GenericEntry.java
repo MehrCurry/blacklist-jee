@@ -31,5 +31,5 @@ public class GenericEntry extends BlacklistEntry {
     @Override
     protected String normalize(String aValue) {
         return aValue;
-    }       
+    }
 }
