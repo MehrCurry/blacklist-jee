@@ -1,13 +1,13 @@
 package prototype.blacklist.boundary;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
 import java.time.LocalDateTime;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
-
-@Path("health")
+@Controller
 public class HealthCheck {
-    @GET
+    @RequestMapping(value = "/resources/health", method = RequestMethod.GET)
     public String check() {
         return "I am alive " + LocalDateTime.now();
     }

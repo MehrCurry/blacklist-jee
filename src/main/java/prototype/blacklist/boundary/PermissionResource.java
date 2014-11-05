@@ -7,21 +7,18 @@ package prototype.blacklist.boundary;
 
 import java.util.Collections;
 import java.util.List;
-import javax.annotation.PostConstruct;
 import prototype.blacklist.entity.Blacklist;
 
-import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
-import javax.transaction.Transactional;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.core.Response;
+import javax.servlet.http.HttpServletResponse;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
-@Stateless
-@Path("/permission")
+@RestController
 public class PermissionResource {
     
     @PersistenceContext
@@ -31,22 +28,22 @@ public class PermissionResource {
         this.em = em;
     }
     
-    @GET
-    @Path("{name}/{value}")
-    public Response isGranted(@PathParam("name") String name,@PathParam("value") String value) {
+    @RequestMapping(value = "/permission/{name}/{value}", method = RequestMethod.GET)
+    public void isGranted(@PathVariable String name,@PathVariable String value, HttpServletResponse response) {
         Query q=em.createNamedQuery("hurz");
         q.setParameter("name", name);
 
         final List results = Collections.EMPTY_LIST;
         if (results.isEmpty()) {
-            return Response.status(Response.Status.NOT_FOUND).header("X-Info", "unknown blacklist: " + name).build();
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            response.setHeader("X-Info", "unknown blacklist: " + name);
         }
         Blacklist blacklist = (Blacklist) results.get(0);
    
         if (blacklist.isBlacklisted(value)) {
-            return Response.status(Response.Status.FORBIDDEN).build();
+            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
         } else {
-            return Response.status(Response.Status.NO_CONTENT).build();
+            response.setStatus(HttpServletResponse.SC_NO_CONTENT);
         }
     }
 }
