@@ -29,15 +29,14 @@ public class BlacklistEntryTest {
                 throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
             }
         };
-        
+
         assertThat(cut.isValid()).isFalse();
         assertThat(cut.getErrors().size()).isGreaterThan(0);
     }
 
     @Test
     public void an_instance_with_value_is_valid() {
-        Blacklist bl=new Blacklist();
-        BlacklistEntry cut = new BlacklistEntry(bl,"bar") {
+      BlacklistEntry cut = new BlacklistEntry("bar") {
 
             @Override
             public boolean matches(String other) {
@@ -56,8 +55,7 @@ public class BlacklistEntryTest {
 
     @Test
     public void an_instance_with_a_too_long_value_must_be_invalid() {
-        Blacklist bl=new Blacklist();
-        BlacklistEntry cut = new BlacklistEntry(bl,"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa") {
+      BlacklistEntry cut = new BlacklistEntry("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa") {
 
             @Override
             public boolean matches(String other) {

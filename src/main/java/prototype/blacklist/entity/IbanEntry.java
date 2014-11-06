@@ -21,13 +21,8 @@ public class IbanEntry extends BlacklistEntry  {
     public IbanEntry() {
     }
 
-    IbanEntry(String value) {
-        super(null,value);
-    }
-
-    
-    public IbanEntry(Blacklist blacklist,String value) {
-        super(blacklist,value);
+  public IbanEntry(String value) {
+    super(value);
     }
 
     @Override

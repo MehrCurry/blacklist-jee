@@ -19,8 +19,8 @@ public class GenericEntry extends BlacklistEntry {
     public GenericEntry() {
     }
 
-    public GenericEntry(Blacklist blacklist,String value) {
-        super(blacklist,value);
+  public GenericEntry(String value) {
+    super(value);
     }
 
     @Override
