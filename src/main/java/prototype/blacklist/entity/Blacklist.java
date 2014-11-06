@@ -6,7 +6,6 @@
 package prototype.blacklist.entity;
 
 import org.apache.commons.validator.routines.checkdigit.IBANCheckDigit;
-import org.springframework.data.rest.core.annotation.RestResource;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -15,7 +14,6 @@ import javax.xml.bind.annotation.XmlRootElement;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 @XmlRootElement
@@ -27,13 +25,9 @@ public class Blacklist extends AbstractEntity {
     private String name;
 
     @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
-    @JoinColumn(name = "blacklist")
-    @RestResource(rel = "generics")
     private List<GenericEntry> genericEentries=new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
-    @JoinColumn(name = "blacklist")
-    @RestResource(rel = "ibans")
     private List<IbanEntry> ibanEentries=new ArrayList<>();
 
     public Blacklist() {
@@ -82,16 +76,11 @@ public class Blacklist extends AbstractEntity {
         return new IBANCheckDigit().isValid(value);
     }
 
-    private static class MatcherPredicate implements Predicate<BlacklistEntry> {
-        private String value;
-
-        public MatcherPredicate(String value) {
-            this.value = value;
-        }
-
-        @Override
-        public boolean test(BlacklistEntry t) {
-            return t.matches(value);
-        }
+    public Blacklist removeEntry(String value) {
+        if (isAnIban(value))
+            ibanEentries.stream().filter(e -> e.matches(value)).forEach(e -> ibanEentries.remove(e));
+        else
+            genericEentries.stream().filter(e -> e.matches(value)).forEach(e -> ibanEentries.remove(e));
+        return this;
     }
 }

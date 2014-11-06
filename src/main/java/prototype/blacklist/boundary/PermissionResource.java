@@ -5,45 +5,49 @@
  */
 package prototype.blacklist.boundary;
 
-import java.util.Collections;
-import java.util.List;
+import org.springframework.web.bind.annotation.*;
+import prototype.blacklist.control.BlacklistRepository;
 import prototype.blacklist.entity.Blacklist;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
+import javax.inject.Inject;
 import javax.servlet.http.HttpServletResponse;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import java.util.Optional;
 
 @RestController
 public class PermissionResource {
-    
-    @PersistenceContext
-    private EntityManager em;
 
-    public void setEm(EntityManager em) {
-        this.em = em;
-    }
-    
+    @Inject
+    private BlacklistRepository repository;
+
     @RequestMapping(value = "/permission/{name}/{value}", method = RequestMethod.GET)
     public void isGranted(@PathVariable String name,@PathVariable String value, HttpServletResponse response) {
-        Query q=em.createNamedQuery("hurz");
-        q.setParameter("name", name);
 
-        final List results = Collections.EMPTY_LIST;
-        if (results.isEmpty()) {
+        Optional<Blacklist> candidate = repository.findByName(name).stream().findFirst();
+        if (!candidate.isPresent()) {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-            response.setHeader("X-Info", "unknown blacklist: " + name);
-        }
-        Blacklist blacklist = (Blacklist) results.get(0);
-   
-        if (blacklist.isBlacklisted(value)) {
+        } else if (candidate.get().isBlacklisted(value)) {
             response.setStatus(HttpServletResponse.SC_FORBIDDEN);
         } else {
             response.setStatus(HttpServletResponse.SC_NO_CONTENT);
         }
     }
+
+    @RequestMapping(value = "/permission/{name}", method = RequestMethod.POST)
+    public void block(@PathVariable String name, @RequestBody String value) {
+
+        Optional<Blacklist> candidate = repository.findByName(name).stream().findFirst();
+        if (candidate.isPresent()) {
+            repository.save(candidate.get().addEntry(value));
+        }
+    }
+
+    @RequestMapping(value = "/permission/{name}", method = RequestMethod.DELETE)
+    public void unblock(@PathVariable String name, @RequestBody String value) {
+
+        Optional<Blacklist> candidate = repository.findByName(name).stream().findFirst();
+        if (candidate.isPresent()) {
+            repository.save(candidate.get().removeEntry(value));
+        }
+    }
+
 }
