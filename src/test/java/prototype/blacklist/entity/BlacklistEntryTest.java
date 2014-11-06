@@ -1,7 +1,8 @@
 package prototype.blacklist.entity;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -35,7 +36,8 @@ public class BlacklistEntryTest {
 
     @Test
     public void an_instance_with_value_is_valid() {
-        BlacklistEntry cut = new BlacklistEntry(null,"bar") {
+        Blacklist bl=new Blacklist();
+        BlacklistEntry cut = new BlacklistEntry(bl,"bar") {
 
             @Override
             public boolean matches(String other) {
@@ -54,7 +56,8 @@ public class BlacklistEntryTest {
 
     @Test
     public void an_instance_with_a_too_long_value_must_be_invalid() {
-        BlacklistEntry cut = new BlacklistEntry(null,"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa") {
+        Blacklist bl=new Blacklist();
+        BlacklistEntry cut = new BlacklistEntry(bl,"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa") {
 
             @Override
             public boolean matches(String other) {

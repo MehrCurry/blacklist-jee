@@ -5,21 +5,18 @@
  */
 package prototype.blacklist.entity;
 
+import org.apache.commons.validator.routines.checkdigit.IBANCheckDigit;
+import org.springframework.data.rest.core.annotation.RestResource;
+
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlRootElement;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-import javax.xml.bind.annotation.XmlRootElement;
-import org.apache.commons.validator.routines.checkdigit.IBANCheckDigit;
 
 @XmlRootElement
 @NamedQuery(name = "hurz", query = "SELECT bl FROM Blacklist bl WHERE bl.name = :name")
@@ -31,10 +28,12 @@ public class Blacklist extends AbstractEntity {
 
     @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
     @JoinColumn(name = "blacklist")
+    @RestResource(rel = "generics")
     private List<GenericEntry> genericEentries=new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
     @JoinColumn(name = "blacklist")
+    @RestResource(rel = "ibans")
     private List<IbanEntry> ibanEentries=new ArrayList<>();
 
     public Blacklist() {
@@ -48,7 +47,7 @@ public class Blacklist extends AbstractEntity {
         return name;
     }
 
-    
+
     // Default visibility for unit tests
     // Do not use outside of tests
     List<GenericEntry> getGenericEentries() {
@@ -58,7 +57,7 @@ public class Blacklist extends AbstractEntity {
     List<IbanEntry> getIbanEentries() {
         return Collections.unmodifiableList(ibanEentries);
     }
-    
+
     public Blacklist addEntry(String value) {
         // This is a bit ugly since GenericEntry is a bit ugly too
         // If we have more meaningful blacklist entry type we should use a factory
@@ -74,24 +73,22 @@ public class Blacklist extends AbstractEntity {
     public boolean isBlacklisted(String value) {
         return matches(genericEentries, value) || matches(ibanEentries, value);
     }
-    
+
     private boolean matches(List<? extends BlacklistEntry> alist,String aValue) {
-        // return !alist.stream().filter(e -> e.matches(aValue)).collect(Collectors.<BlacklistEntry>toList()).isEmpty();
-        return !alist.stream().filter(new MatcherPredicate(aValue)).collect(Collectors.<BlacklistEntry>toList()).isEmpty();
-        // return false;    
+        return !alist.stream().filter(e -> e.matches(aValue)).collect(Collectors.<BlacklistEntry>toList()).isEmpty();
     }
 
     private boolean isAnIban(String value) {
-        return new IBANCheckDigit().isValid(value);                
+        return new IBANCheckDigit().isValid(value);
     }
-    
+
     private static class MatcherPredicate implements Predicate<BlacklistEntry> {
         private String value;
 
         public MatcherPredicate(String value) {
             this.value = value;
         }
-        
+
         @Override
         public boolean test(BlacklistEntry t) {
             return t.matches(value);
