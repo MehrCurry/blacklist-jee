@@ -7,7 +7,7 @@ RUN apt-get install -y git maven
 ADD settings.xml /root/.m2/settings.xml
 
 WORKDIR /opt
-RUN git clone https://github.com/MehrCurry/blacklist-jee.git
+RUN mvn dependency:copy -Dartifact=prototype:blacklist-spring-boot:1.0.0-SNAPSHOT
 
 EXPOSE 8080
 
