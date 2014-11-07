@@ -1,8 +1,7 @@
 #!/bin/bash
 
-cd /opt/blacklist-jee
-git fetch && git checkout spring-boot
-mvn package
+cd /opt
+$MVN_HOME/bin/mvn dependency:copy -Dartifact=prototype:blacklist-spring-boot:1.0.0-SNAPSHOT
 
-java -jar /opt/blacklist-jee7*.jar
+java -jar /opt/blacklist-*.jar
 
