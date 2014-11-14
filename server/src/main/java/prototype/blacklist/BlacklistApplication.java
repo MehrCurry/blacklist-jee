@@ -22,7 +22,7 @@ import org.springframework.stereotype.Controller;
 @EnableAutoConfiguration
 public class BlacklistApplication {
 
-    public static void main(String[] args) throws Exception {
-        SpringApplication.run(BlacklistApplication.class, args);
-    }
+  public static void main(String[] args) throws Exception {
+    SpringApplication.run(BlacklistApplication.class, args);
+  }
 }

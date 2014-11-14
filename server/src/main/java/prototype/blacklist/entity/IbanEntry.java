@@ -11,32 +11,31 @@ import javax.persistence.Entity;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
- *
  * @author guido
  */
 @Entity
 @XmlRootElement
-public class IbanEntry extends BlacklistEntry  {
+public class IbanEntry extends BlacklistEntry {
 
-    public IbanEntry() {
-    }
+  public IbanEntry() {
+  }
 
   public IbanEntry(String value) {
     super(value);
-    }
+  }
 
-    @Override
-    public boolean matches(String other) {
-        return value.equals(normalize(other));
-    }
+  @Override
+  public boolean matches(String other) {
+    return value.equals(normalize(other));
+  }
 
-    @Override
-    public String normalize(String value) {
-        return value.replaceAll("\\W", "").toUpperCase();
-    }
+  @Override
+  public String normalize(String value) {
+    return value.replaceAll("\\W", "").toUpperCase();
+  }
 
-    @Override
-    public boolean isValid() {
-        return super.isValid() && new IBANCheckDigit().isValid(value);
-    }
+  @Override
+  public boolean isValid() {
+    return super.isValid() && new IBANCheckDigit().isValid(value);
+  }
 }

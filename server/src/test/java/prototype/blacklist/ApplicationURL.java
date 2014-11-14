@@ -6,20 +6,19 @@
 package prototype.blacklist;
 
 /**
- *
  * @author michael
  */
 public enum ApplicationURL {
 
-    LOCAL("http://localhost:8080/blacklist-jee7/resources/blacklist");
+  LOCAL("http://localhost:8080/blacklist-jee7/resources/blacklist");
 
-    private String appUrl;
+  private String appUrl;
 
-    private ApplicationURL(String url) {
-        appUrl = url;
-    }
+  private ApplicationURL(String url) {
+    appUrl = url;
+  }
 
-    public String getAppURL() {
-        return appUrl;
-    }
+  public String getAppURL() {
+    return appUrl;
+  }
 }

@@ -7,6 +7,6 @@ import prototype.blacklist.entity.Blacklist;
 import java.util.List;
 
 @Repository
-public interface BlacklistRepository extends JpaRepository<Blacklist,Long> {
-    List<Blacklist> findByName(String name);
+public interface BlacklistRepository extends JpaRepository<Blacklist, Long> {
+  List<Blacklist> findByName(String name);
 }

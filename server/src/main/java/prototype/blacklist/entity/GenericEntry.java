@@ -9,27 +9,26 @@ import javax.persistence.Entity;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
- *
  * @author guido
  */
 @Entity
 @XmlRootElement
 public class GenericEntry extends BlacklistEntry {
 
-    public GenericEntry() {
-    }
+  public GenericEntry() {
+  }
 
   public GenericEntry(String value) {
     super(value);
-    }
+  }
 
-    @Override
-    public boolean matches(String other) {
-        return value.equals(other);
-    }
+  @Override
+  public boolean matches(String other) {
+    return value.equals(other);
+  }
 
-    @Override
-    protected String normalize(String aValue) {
-        return aValue;
-    }
+  @Override
+  protected String normalize(String aValue) {
+    return aValue;
+  }
 }

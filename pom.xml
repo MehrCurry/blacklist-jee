@@ -5,11 +5,16 @@
   <artifactId>blacklist-spring-boot</artifactId>
     <version>1.0.0-SNAPSHOT</version>
   <name>blacklist-spring-boot</name>
+  <packaging>pom</packaging>
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
         <version>1.1.8.RELEASE</version>
     </parent>
+  <modules>
+    <module>server</module>
+    <module>integration-test</module>
+  </modules>
     <dependencies>
         <dependency>
             <groupId>com.google.guava</groupId>
@@ -79,10 +84,6 @@
     </properties>
     <build>
         <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
