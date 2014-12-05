@@ -5,10 +5,14 @@
  */
 package prototype.blacklist.boundary;
 
+import net.jcip.annotations.NotThreadSafe;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.mockito.Matchers;
+import prototype.blacklist.categories.IntegrationTest;
+import prototype.blacklist.categories.LongRunning;
 import prototype.blacklist.control.BlacklistRepository;
 import prototype.blacklist.entity.Blacklist;
 
@@ -19,6 +23,8 @@ import java.util.List;
 
 import static org.mockito.Mockito.*;
 
+@Category({IntegrationTest.class, LongRunning.class})
+@NotThreadSafe
 public class PermissionResourceTest {
   private PermissionResource cut;
 
