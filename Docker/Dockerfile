@@ -1,15 +1,14 @@
 FROM dockerfile/java:oracle-java8
 MAINTAINER Guido Zockoll
 
-RUN apt-get update
-RUN apt-get install -y git
-
-ADD settings.xml /root/.m2/settings.xml
-
 WORKDIR /opt
-ADD server-1.0.0-SNAPSHOT.jar /opt/blacklist-spring-boot.jar
+COPY server-1.0.0-SNAPSHOT.jar /opt/blacklist-spring-boot.jar
+COPY start.sh /opt/
+RUN chmod +x /opt/start.sh
+
+ENV PROFILE docker
 
 EXPOSE 8080
 
-ENTRYPOINT [ "/usr/bin/java", "-Dspring.profiles.active=docker", "-jar", "/opt/blacklist-spring-boot.jar"]
+ENTRYPOINT [ "/opt/start.sh" ]
 
